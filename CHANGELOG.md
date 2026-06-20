@@ -6,7 +6,7 @@ All notable changes to Codex Usage Nano are documented here.
 
 ### Changed
 
-- Added a compressed README demo video showing the draggable floating tab and detail panel.
+- Added a compressed README demo video with a GitHub-friendly preview image link.
 
 ## 0.0.2 - 2026-06-21
 
