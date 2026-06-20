@@ -2,9 +2,18 @@
 
 All notable changes to Codex Usage Nano are documented here.
 
+## 0.0.2 - 2026-06-21
+
+### Changed
+
+- Renamed the project to Codex Usage Nano.
+- Renamed the SwiftPM package, macOS app bundle, executable, and screenshots to use the Nano name.
+- Rewrote README content for general users.
+- Removed private-snapshot naming and owner-specific metadata from public-facing files.
+
 ## 0.0.1 - 2026-06-07
 
-First stable personal release.
+First stable release.
 
 ### Added
 
