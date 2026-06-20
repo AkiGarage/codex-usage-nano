@@ -127,8 +127,11 @@ You can also adjust opacity from the floating tab. If the panel becomes too tran
 
 Right-click, two-finger tap, or Control-click the floating tab to open the menu.
 
-1. `Refresh`: update Codex usage immediately.
-2. `Quit Codex Usage Nano`: quit the app.
+![Tab menu showing Show Panel, Refresh, and Quit](screenshots/tab-menu.png)
+
+1. `Show Panel` / `Hide Panel`: show or hide the detail panel.
+2. `Refresh`: update Codex usage immediately.
+3. `Quit Codex Usage Nano`: quit the app.
 
 ### 6.7 Quit from Terminal
 
