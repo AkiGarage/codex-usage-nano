@@ -13,11 +13,9 @@ Version: `0.0.2`
 
 ## Demo
 
-この demo では、ドラッグできる floating tab、ワンクリックで開く詳細パネル、そして tab がメニューバー / notch 周辺に依存しないことを確認できます。
+この animated preview では、ドラッグできる floating tab、ワンクリックで開く詳細パネル、そして tab がメニューバー / notch 周辺に依存しないことを確認できます。
 
-[![Codex Usage Nano demo video](screenshots/demo-poster.png)](media/codex-usage-nano-demo.mp4?raw=1)
-
-[Demo video を開く](media/codex-usage-nano-demo.mp4?raw=1)。preview image または link をクリックすると MP4 ファイルを開けます。
+<img src="screenshots/codex-usage-nano-demo.gif" alt="Codex Usage Nano の floating tab をドラッグし、詳細パネルを開く animated demo" width="100%">
 
 <table>
   <tr>

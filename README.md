@@ -13,11 +13,9 @@ Version: `0.0.2`
 
 ## Demo
 
-This demo shows the draggable floating tab, the one-click detail panel, and how the tab stays out of the menu bar / notch area.
+This animated preview shows the draggable floating tab, the one-click detail panel, and how the tab stays out of the menu bar / notch area.
 
-[![Codex Usage Nano demo video](screenshots/demo-poster.png)](media/codex-usage-nano-demo.mp4?raw=1)
-
-[Open the demo video](media/codex-usage-nano-demo.mp4?raw=1). Click the preview image or link to open the MP4 file.
+<img src="screenshots/codex-usage-nano-demo.gif" alt="Animated demo of dragging the Codex Usage Nano floating tab and opening the detail panel" width="100%">
 
 <table>
   <tr>
