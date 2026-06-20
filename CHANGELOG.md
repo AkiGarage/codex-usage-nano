@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Codex Usage Widget are documented here.
+All notable changes to Codex Usage Nano are documented here.
 
 ## 0.0.1 - 2026-06-07
 

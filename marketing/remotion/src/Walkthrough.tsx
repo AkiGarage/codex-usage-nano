@@ -80,7 +80,7 @@ const IntroScene = ({duration}: TimedProps) => {
         <div style={{...iconShell, ...iconStyle}}>
           <Img src={staticFile("app-icon.svg")} style={iconImage} />
         </div>
-        <h1 style={{...heroTitle, ...titleStyle}}>Codex Usage Widget</h1>
+        <h1 style={{...heroTitle, ...titleStyle}}>Codex Usage Nano</h1>
         <p style={{...heroSubtitle, ...subtitleStyle}}>
           Codex usage at a glance, without menu bar clutter.
         </p>
@@ -266,7 +266,7 @@ const CreditScene = ({duration}: TimedProps) => {
           Powered by the installed CodexBarCLI. CodexBar is MIT licensed; this project keeps
           attribution explicit and does not bundle CodexBar.
         </p>
-        <div style={{...repoPill, ...rise(frame, 48, 12)}}>github.com/AkiGarage/codex-usage-widget-public</div>
+        <div style={{...repoPill, ...rise(frame, 48, 12)}}>github.com/owner/codex-usage-nano</div>
       </div>
     </Scene>
   );
@@ -314,7 +314,7 @@ const ContextMenu = ({style}: {style?: CSSProperties}) => (
   <div style={{...contextMenu, ...style}}>
     <div style={contextMenuItem}>Show Panel</div>
     <div style={contextMenuItem}>Refresh</div>
-    <div style={{...contextMenuItem, color: palette.red}}>Quit Codex Usage Widget</div>
+    <div style={{...contextMenuItem, color: palette.red}}>Quit Codex Usage Nano</div>
   </div>
 );
 

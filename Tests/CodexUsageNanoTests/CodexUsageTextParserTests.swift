@@ -1,5 +1,5 @@
 import XCTest
-@testable import CodexUsageWidget
+@testable import CodexUsageNano
 
 final class CodexUsageTextParserTests: XCTestCase {
     func testParsesCodexBarJSONLimitsAndWeeklyPace() throws {

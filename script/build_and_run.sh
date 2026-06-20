@@ -2,8 +2,8 @@
 set -euo pipefail
 
 MODE="${1:-run}"
-APP_NAME="CodexUsageWidget"
-BUNDLE_ID="local.codex.CodexUsageWidget"
+APP_NAME="CodexUsageNano"
+BUNDLE_ID="local.codex.CodexUsageNano"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIST_DIR="$ROOT_DIR/dist"

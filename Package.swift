@@ -3,20 +3,20 @@
 import PackageDescription
 
 let package = Package(
-    name: "CodexUsageWidget",
+    name: "CodexUsageNano",
     platforms: [
         .macOS(.v14)
     ],
     products: [
-        .executable(name: "CodexUsageWidget", targets: ["CodexUsageWidget"])
+        .executable(name: "CodexUsageNano", targets: ["CodexUsageNano"])
     ],
     targets: [
         .executableTarget(
-            name: "CodexUsageWidget"
+            name: "CodexUsageNano"
         ),
         .testTarget(
-            name: "CodexUsageWidgetTests",
-            dependencies: ["CodexUsageWidget"]
+            name: "CodexUsageNanoTests",
+            dependencies: ["CodexUsageNano"]
         )
     ]
 )

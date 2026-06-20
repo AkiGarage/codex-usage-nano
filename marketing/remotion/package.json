@@ -1,12 +1,12 @@
 {
-  "name": "codex-usage-widget-walkthrough",
+  "name": "codex-usage-nano-walkthrough",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "preview": "remotion preview src/index.tsx",
-    "render": "remotion render src/index.tsx CodexUsageWidgetWalkthrough out/codex-usage-widget-walkthrough.mp4 --codec=h264 --crf=23 --pixel-format=yuv420p",
-    "still": "remotion still src/index.tsx CodexUsageWidgetWalkthrough out/codex-usage-widget-poster.png --frame=930"
+    "render": "remotion render src/index.tsx CodexUsageNanoWalkthrough out/codex-usage-nano-walkthrough.mp4 --codec=h264 --crf=23 --pixel-format=yuv420p",
+    "still": "remotion still src/index.tsx CodexUsageNanoWalkthrough out/codex-usage-nano-poster.png --frame=930"
   },
   "dependencies": {
     "@remotion/cli": "4.0.472",

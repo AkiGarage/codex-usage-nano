@@ -9,7 +9,7 @@ export const VIDEO_DURATION_FRAMES = 1650;
 export const RemotionRoot = () => {
   return (
     <Composition
-      id="CodexUsageWidgetWalkthrough"
+      id="CodexUsageNanoWalkthrough"
       component={Walkthrough}
       durationInFrames={VIDEO_DURATION_FRAMES}
       fps={VIDEO_FPS}

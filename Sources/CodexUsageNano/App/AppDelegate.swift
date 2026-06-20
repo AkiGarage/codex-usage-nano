@@ -110,7 +110,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem(title: toggleTitle, action: #selector(togglePanel), keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: "Refresh", action: #selector(refreshUsage), keyEquivalent: ""))
         menu.addItem(.separator())
-        menu.addItem(NSMenuItem(title: "Quit Codex Usage Widget", action: #selector(quitApp), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: "Quit Codex Usage Nano", action: #selector(quitApp), keyEquivalent: "q"))
         menu.items.forEach { $0.target = self }
         NSMenu.popUpContextMenu(menu, with: event, for: view)
     }
@@ -325,12 +325,12 @@ enum FrameDiagnostics {
             "panelBounds=\(panelBounds.map(NSStringFromRect) ?? "nil")",
             "delta=\(delta.map { String(format: "%.2f", Double($0)) } ?? "nil")"
         ].joined(separator: " ")
-        NSLog("CodexUsageWidgetFrame %@", message)
+        NSLog("CodexUsageNanoFrame %@", message)
         appendToFile(message)
     }
 
     private static func appendToFile(_ message: String) {
-        let url = URL(fileURLWithPath: "/private/tmp/codex-usage-widget-frames.log")
+        let url = URL(fileURLWithPath: "/private/tmp/codex-usage-nano-frames.log")
         let line = "\(Date()) \(message)\n"
         guard let data = line.data(using: .utf8) else { return }
         if FileManager.default.fileExists(atPath: url.path),

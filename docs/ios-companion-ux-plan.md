@@ -1,6 +1,6 @@
 # iPhone Companion UX Plan
 
-This document defines a practical iPhone companion for Codex Usage Widget.
+This document defines a practical iPhone companion for Codex Usage Nano.
 The goal is not to copy the macOS floating panel exactly. iOS does not allow a
 normal app to keep an arbitrary always-floating desktop window above other apps.
 The right iPhone experience is a tiny, glanceable widget/control surface backed
@@ -388,7 +388,7 @@ should not need Codex/OpenAI credentials just to show a usage percentage.
 Build the MVP as:
 
 ```text
-Mac CodexUsageWidget
+Mac CodexUsageNano
   -> CodexBarCLI
   -> sanitized snapshot
   -> Cloudflare Worker/KV

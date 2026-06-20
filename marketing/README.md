@@ -1,6 +1,6 @@
 # Marketing Assets
 
-This directory contains reproducible marketing assets for Codex Usage Widget.
+This directory contains reproducible marketing assets for Codex Usage Nano.
 
 ## Walkthrough Video
 
@@ -24,5 +24,5 @@ npm install
 npm run render
 ```
 
-The default render writes `marketing/remotion/out/codex-usage-widget-walkthrough.mp4`.
+The default render writes `marketing/remotion/out/codex-usage-nano-walkthrough.mp4`.
 For release artifacts, render to `artifacts/videos/` with a dated filename.

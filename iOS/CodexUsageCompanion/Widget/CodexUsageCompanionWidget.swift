@@ -26,7 +26,7 @@ struct CodexUsageCompanionWidget: Widget {
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: CodexUsageProvider()) { entry in
-            CodexUsageWidgetView(entry: entry)
+            CodexUsageNanoView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
         .configurationDisplayName("Codex Usage")
@@ -35,7 +35,7 @@ struct CodexUsageCompanionWidget: Widget {
     }
 }
 
-struct CodexUsageWidgetView: View {
+struct CodexUsageNanoView: View {
     @Environment(\.widgetFamily) private var family
     let entry: CodexUsageEntry
 

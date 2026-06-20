@@ -1,6 +1,6 @@
 import AppKit
 import XCTest
-@testable import CodexUsageWidget
+@testable import CodexUsageNano
 
 final class TabPositioningTests: XCTestCase {
     func testTabWindowLevelCanOccupyMenuBarArea() {
