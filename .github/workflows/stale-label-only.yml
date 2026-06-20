@@ -1,0 +1,33 @@
+name: stale-label-only
+
+on:
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Mark stale issues and PRs without closing
+        uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          days-before-stale: 60
+          days-before-close: -1
+          stale-issue-label: "stale"
+          stale-pr-label: "stale"
+          exempt-issue-labels: "security,priority:high,needs-maintainer-review,approved-to-close"
+          exempt-pr-labels: "security,priority:high,needs-maintainer-review,protected-path"
+          stale-issue-message: >
+            This issue has been inactive for a while. It is only being labeled
+            for maintainer review and will not be closed automatically.
+          stale-pr-message: >
+            This pull request has been inactive for a while. It is only being
+            labeled for maintainer review and will not be closed automatically.

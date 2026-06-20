@@ -1,0 +1,49 @@
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+          - "scripts/ci/**"
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/**"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "test/**"
+          - "tests/**"
+          - "**/*.test.*"
+          - "**/*.spec.*"
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "package.json"
+          - "package-lock.json"
+          - "pnpm-lock.yaml"
+          - "yarn.lock"
+          - "Cargo.toml"
+          - "Cargo.lock"
+          - "pyproject.toml"
+          - "uv.lock"
+          - "requirements*.txt"
+
+security:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "SECURITY.md"
+          - "**/auth/**"
+          - "**/security/**"
+          - "**/*auth*"
+          - "**/*crypto*"
+
+release:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/release*.yml"
+          - ".github/workflows/publish*.yml"
+          - "release/**"
+          - "dist/**"

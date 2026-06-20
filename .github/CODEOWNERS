@@ -1,0 +1,7 @@
+* @AkiGarage
+
+.github/ @AkiGarage
+.github/workflows/ @AkiGarage
+SECURITY.md @AkiGarage
+renovate.json @AkiGarage
+Package.swift @AkiGarage
