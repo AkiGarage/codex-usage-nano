@@ -7,6 +7,7 @@ All notable changes to Codex Usage Nano are documented here.
 ### Changed
 
 - Replaced the README video link with an inline animated GIF preview for reliable GitHub rendering.
+- Recut the README GIF so top-edge / menu-bar-adjacent placement is visible.
 
 ## 0.0.2 - 2026-06-21
 

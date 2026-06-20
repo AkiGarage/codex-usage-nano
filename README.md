@@ -9,13 +9,13 @@
 
 Version: `0.0.2`
 
-**A tiny draggable Codex usage tab for notched MacBooks. Put it anywhere, keep it out of the menu bar, and open details only when you need them.**
+**A tiny draggable Codex usage tab for notched MacBooks. Put it anywhere, including along the top edge, avoid the notch, and open details only when you need them.**
 
 ## Demo
 
-This animated preview shows the draggable floating tab, the one-click detail panel, and how the tab stays out of the menu bar / notch area.
+This animated preview shows the draggable floating tab, top-edge / menu-bar-adjacent placement, and the one-click detail panel. It is not a menu bar item, so you can move it away from the notch.
 
-<img src="screenshots/codex-usage-nano-demo.gif" alt="Animated demo of dragging the Codex Usage Nano floating tab and opening the detail panel" width="100%">
+<img src="screenshots/codex-usage-nano-demo.gif" alt="Animated demo of placing the Codex Usage Nano floating tab along the top edge and opening the detail panel" width="100%">
 
 <table>
   <tr>

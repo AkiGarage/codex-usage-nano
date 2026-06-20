@@ -9,13 +9,13 @@
 
 Version: `0.0.2`
 
-**MacBook の notch でメニューバーアプリが隠れる問題を避ける、小さなドラッグ可能な Codex usage tab です。好きな位置に置けて邪魔にならず、詳細は必要なときだけワンクリックで開けます。**
+**MacBook の notch でメニューバーアプリが隠れる問題を避ける、小さなドラッグ可能な Codex usage tab です。上端 / メニューバー周辺を含む好きな位置に置けて、詳細は必要なときだけワンクリックで開けます。**
 
 ## Demo
 
-この animated preview では、ドラッグできる floating tab、ワンクリックで開く詳細パネル、そして tab がメニューバー / notch 周辺に依存しないことを確認できます。
+この animated preview では、ドラッグできる floating tab、上端 / メニューバー周辺への配置、ワンクリックで開く詳細パネルを確認できます。メニューバー項目ではないので、notch を避けた位置へ動かせます。
 
-<img src="screenshots/codex-usage-nano-demo.gif" alt="Codex Usage Nano の floating tab をドラッグし、詳細パネルを開く animated demo" width="100%">
+<img src="screenshots/codex-usage-nano-demo.gif" alt="Codex Usage Nano の floating tab を上端に置き、詳細パネルを開く animated demo" width="100%">
 
 <table>
   <tr>
