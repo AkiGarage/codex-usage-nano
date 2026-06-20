@@ -9,6 +9,10 @@
 
 Version: `0.0.2`
 
+<p align="center">
+  <img src="screenshots/app-icon.png" alt="Codex Usage Nano app icon" width="128">
+</p>
+
 **MacBook の notch でメニューバーアプリが隠れる問題を避ける、小さなドラッグ可能な Codex usage tab です。上端 / メニューバー周辺を含む好きな位置に置けて、詳細は必要なときだけワンクリックで開けます。**
 
 ## Demo

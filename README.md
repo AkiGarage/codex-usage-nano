@@ -9,6 +9,10 @@
 
 Version: `0.0.2`
 
+<p align="center">
+  <img src="screenshots/app-icon.png" alt="Codex Usage Nano app icon" width="128">
+</p>
+
 **A tiny draggable Codex usage tab for notched MacBooks. Put it anywhere, including along the top edge, avoid the notch, and open details only when you need them.**
 
 ## Demo
