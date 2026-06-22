@@ -47,7 +47,7 @@ body:
     id: os
     attributes:
       label: Operating system
-      placeholder: "macOS, Linux, Windows, iOS, Android"
+      placeholder: "macOS version and Mac model"
     validations:
       required: false
   - type: textarea

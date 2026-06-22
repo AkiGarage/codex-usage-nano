@@ -5,9 +5,45 @@ final class DraggableTabHostingView<Content: View>: NSHostingView<Content> {
     var onClick: (() -> Void)?
     var onDoubleClick: (() -> Void)?
     var onContextMenu: ((NSEvent) -> Void)?
+    var onHoverChanged: ((Bool) -> Void)?
+    var onDragStarted: (() -> Void)?
     var onMove: ((NSPoint) -> Void)?
     var onMoveEnded: (() -> Void)?
     var onOpacityDelta: ((CGFloat) -> Void)?
+
+    private var trackingArea: NSTrackingArea?
+
+    override var acceptsFirstResponder: Bool {
+        true
+    }
+
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
+        true
+    }
+
+    override func updateTrackingAreas() {
+        if let trackingArea {
+            removeTrackingArea(trackingArea)
+        }
+
+        let trackingArea = NSTrackingArea(
+            rect: bounds,
+            options: [.activeAlways, .mouseEnteredAndExited, .enabledDuringMouseDrag, .inVisibleRect],
+            owner: self,
+            userInfo: nil
+        )
+        addTrackingArea(trackingArea)
+        self.trackingArea = trackingArea
+        super.updateTrackingAreas()
+    }
+
+    override func mouseEntered(with event: NSEvent) {
+        onHoverChanged?(true)
+    }
+
+    override func mouseExited(with event: NSEvent) {
+        onHoverChanged?(false)
+    }
 
     override func mouseDown(with event: NSEvent) {
         if event.modifierFlags.contains(.control) {
@@ -22,8 +58,8 @@ final class DraggableTabHostingView<Content: View>: NSHostingView<Content> {
 
         guard let window else { return }
 
-        let startMouse = NSEvent.mouseLocation
-        let startOrigin = window.frame.origin
+        var startMouse = NSEvent.mouseLocation
+        var startOrigin = window.frame.origin
         var didDrag = false
 
         while true {
@@ -38,16 +74,22 @@ final class DraggableTabHostingView<Content: View>: NSHostingView<Content> {
                     x: currentMouse.x - startMouse.x,
                     y: currentMouse.y - startMouse.y
                 )
-                if hypot(delta.x, delta.y) > 3 {
+                if !didDrag, hypot(delta.x, delta.y) > 3 {
                     didDrag = true
-                }
-                if didDrag {
+                    onDragStarted?()
+                    let collapsedOrigin = window.frame.origin
                     onMove?(
                         NSPoint(
-                            x: startOrigin.x + delta.x,
-                            y: startOrigin.y + delta.y
+                            x: collapsedOrigin.x + delta.x,
+                            y: collapsedOrigin.y + delta.y
                         )
                     )
+                    startMouse = currentMouse
+                    startOrigin = window.frame.origin
+                    continue
+                }
+                if didDrag {
+                    onMove?(NSPoint(x: startOrigin.x + delta.x, y: startOrigin.y + delta.y))
                 }
             case .leftMouseUp:
                 if didDrag {

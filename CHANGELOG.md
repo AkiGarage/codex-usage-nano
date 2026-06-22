@@ -2,7 +2,7 @@
 
 All notable changes to Codex Usage Nano are documented here.
 
-## Unreleased
+## 0.0.3 - 2026-06-22
 
 ### Changed
 
@@ -10,6 +10,15 @@ All notable changes to Codex Usage Nano are documented here.
 - Recut the README GIF so top-edge / menu-bar-adjacent placement is visible.
 - Recut the README GIF again so the full detail panel remains visible.
 - Added the app icon near the top of both README pages.
+- Rewrote the English and Japanese README pages with matching macOS-only `v0.0.3` content.
+- Updated the app and README to the latest floating-tab interaction: collapsed Session / Weekly color bars, mouseover percentage display, drag-anywhere placement, and one-click detail panel.
+- Documented opacity mode accurately: the tab percentage turns cyan while the detail panel shows an `OP <percent>%` badge.
+- Documented CodexBar accurately: CodexBar must be installed, but the CodexBar app does not need to be running while Codex Usage Nano refreshes through `CodexBarCLI`.
+- Updated release install instructions for `CodexUsageNano-0.0.3-macos.zip`.
+
+### Removed
+
+- Removed the unreleased iOS companion project and iOS planning document from the public release surface.
 
 ## 0.0.2 - 2026-06-21
 
@@ -18,7 +27,7 @@ All notable changes to Codex Usage Nano are documented here.
 - Renamed the project to Codex Usage Nano.
 - Renamed the SwiftPM package, macOS app bundle, executable, and screenshots to use the Nano name.
 - Rewrote README content for general users.
-- Removed private-snapshot naming and owner-specific metadata from public-facing files.
+- Removed pre-release snapshot naming and owner-specific metadata from public-facing files.
 
 ## 0.0.1 - 2026-06-07
 
