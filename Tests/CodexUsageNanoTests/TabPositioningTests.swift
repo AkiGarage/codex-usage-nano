@@ -3,15 +3,36 @@ import XCTest
 @testable import CodexUsageNano
 
 final class TabPositioningTests: XCTestCase {
+    func testPanelOffsetStoreResetClearsSavedOffset() {
+        let suiteName = "PanelOffsetStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = PanelOffsetStore(defaults: defaults)
+
+        store.save(NSSize(width: -120, height: -240))
+        XCTAssertEqual(store.load(), NSSize(width: -120, height: -240))
+
+        store.reset()
+
+        XCTAssertNil(store.load())
+        XCTAssertFalse(store.hasSavedOffset)
+    }
+
+    func testEdgeTabPresentationUsesSlimCollapsedBar() {
+        XCTAssertEqual(EdgeTabPresentation.size(for: .collapsed), CGSize(width: 52, height: 16))
+        XCTAssertEqual(EdgeTabPresentation.size(for: .dragging), CGSize(width: 52, height: 16))
+        XCTAssertEqual(EdgeTabPresentation.size(for: .expanded), CGSize(width: 52, height: 30))
+    }
+
     func testTabWindowLevelCanOccupyMenuBarArea() {
         XCTAssertEqual(TabPositioning.windowLevel, .statusBar)
         XCTAssertGreaterThan(TabPositioning.windowLevel.rawValue, NSWindow.Level.floating.rawValue)
     }
 
-    func testPanelHugsTabWhenTabIsInMenuBarArea() {
+    func testPanelCentersUnderTopTabWithSmallGap() {
         let visibleFrame = NSRect(x: 0, y: 0, width: 1470, height: 923)
         let panelSize = NSSize(width: 360, height: 190)
-        let tabFrame = NSRect(x: 1350, y: 926, width: 76, height: 30)
+        let tabFrame = NSRect(x: 709, y: 926, width: 52, height: 30)
 
         let origin = TabPositioning.panelOrigin(
             size: panelSize,
@@ -20,14 +41,14 @@ final class TabPositioningTests: XCTestCase {
             screenFrame: NSRect(x: 0, y: 0, width: 1470, height: 956)
         )
 
-        XCTAssertEqual(origin.x, 982)
-        XCTAssertEqual(origin.y + panelSize.height, tabFrame.minY)
+        XCTAssertEqual(origin.x + panelSize.width / 2, tabFrame.midX)
+        XCTAssertEqual(origin.y + panelSize.height + TabPositioning.panelTopGap, tabFrame.minY)
     }
 
-    func testPanelKeepsCenteredPlacementAwayFromMenuBar() {
+    func testPanelClampsHorizontallyNearRightEdge() {
         let visibleFrame = NSRect(x: 0, y: 0, width: 1470, height: 923)
         let panelSize = NSSize(width: 360, height: 190)
-        let tabFrame = NSRect(x: 1350, y: 400, width: 76, height: 30)
+        let tabFrame = NSRect(x: 1400, y: 926, width: 52, height: 30)
 
         let origin = TabPositioning.panelOrigin(
             size: panelSize,
@@ -36,7 +57,60 @@ final class TabPositioningTests: XCTestCase {
             screenFrame: NSRect(x: 0, y: 0, width: 1470, height: 956)
         )
 
-        XCTAssertEqual(origin.y, 320)
+        XCTAssertEqual(origin.x + panelSize.width + TabPositioning.edgePadding, visibleFrame.maxX)
+        XCTAssertEqual(origin.y + panelSize.height + TabPositioning.panelTopGap, tabFrame.minY)
+    }
+
+    func testPanelClampsHorizontallyNearLeftEdge() {
+        let visibleFrame = NSRect(x: 0, y: 0, width: 1470, height: 923)
+        let panelSize = NSSize(width: 360, height: 190)
+        let tabFrame = NSRect(x: 4, y: 926, width: 52, height: 30)
+
+        let origin = TabPositioning.panelOrigin(
+            size: panelSize,
+            anchor: tabFrame,
+            visibleFrame: visibleFrame,
+            screenFrame: NSRect(x: 0, y: 0, width: 1470, height: 956)
+        )
+
+        XCTAssertEqual(origin.x, visibleFrame.minX + TabPositioning.edgePadding)
+        XCTAssertEqual(origin.y + panelSize.height + TabPositioning.panelTopGap, tabFrame.minY)
+    }
+
+    func testSavedPanelOffsetRestoresRelativePosition() {
+        let visibleFrame = NSRect(x: 0, y: 0, width: 1470, height: 923)
+        let panelSize = NSSize(width: 360, height: 190)
+        let tabFrame = NSRect(x: 700, y: 700, width: 52, height: 30)
+        let savedOffset = NSSize(width: -120, height: -240)
+
+        let origin = TabPositioning.panelOrigin(
+            size: panelSize,
+            anchor: tabFrame,
+            savedOffset: savedOffset,
+            visibleFrame: visibleFrame,
+            screenFrame: NSRect(x: 0, y: 0, width: 1470, height: 956)
+        )
+
+        XCTAssertEqual(origin.x, tabFrame.minX + savedOffset.width)
+        XCTAssertEqual(origin.y, tabFrame.minY + savedOffset.height)
+    }
+
+    func testSavedPanelOffsetIsClampedOnScreen() {
+        let visibleFrame = NSRect(x: 0, y: 0, width: 1470, height: 923)
+        let panelSize = NSSize(width: 360, height: 190)
+        let tabFrame = NSRect(x: 1400, y: 910, width: 52, height: 30)
+        let savedOffset = NSSize(width: 100, height: 100)
+
+        let origin = TabPositioning.panelOrigin(
+            size: panelSize,
+            anchor: tabFrame,
+            savedOffset: savedOffset,
+            visibleFrame: visibleFrame,
+            screenFrame: NSRect(x: 0, y: 0, width: 1470, height: 956)
+        )
+
+        XCTAssertEqual(origin.x + panelSize.width + TabPositioning.edgePadding, visibleFrame.maxX)
+        XCTAssertEqual(origin.y + panelSize.height + TabPositioning.edgePadding, 956)
     }
 
     func testOpacityAdjustsContinuouslyAndClamps() {
@@ -82,5 +156,20 @@ final class TabPositioningTests: XCTestCase {
 
         XCTAssertEqual(origin.x, 32)
         XCTAssertEqual(origin.y, 48)
+    }
+
+    func testTabResizeKeepsTopEdgeWhenDockedAtScreenTop() {
+        let screenFrame = NSRect(x: 0, y: 0, width: 1440, height: 900)
+        let visibleFrame = NSRect(x: 0, y: 0, width: 1440, height: 865)
+        let currentFrame = NSRect(origin: NSPoint(x: 1328, y: 884), size: EdgeTabPresentation.collapsedSize)
+
+        let origin = TabPositioning.resizedOrigin(
+            from: currentFrame,
+            to: EdgeTabPresentation.expandedSize,
+            visibleFrame: visibleFrame,
+            screenFrame: screenFrame
+        )
+
+        XCTAssertEqual(origin.y + EdgeTabPresentation.expandedSize.height, screenFrame.maxY)
     }
 }

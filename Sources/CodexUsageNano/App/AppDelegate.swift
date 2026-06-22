@@ -2,14 +2,19 @@ import AppKit
 import SwiftUI
 
 @MainActor
-final class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private let store = UsageStore(service: CodexUsageService())
+    private let tabPresentation = EdgeTabPresentationState()
+    private let panelOffsetStore = PanelOffsetStore()
     private let panelSize = NSSize(width: 360, height: 190)
-    private let tabSize = NSSize(width: 76, height: 30)
     private let tabOriginXKey = "tabOriginX"
     private let tabOriginYKey = "tabOriginY"
     private var panel: NSPanel?
     private var tabPanel: NSPanel?
+    private var isTabDragging = false
+    private var isPositioningPanel = false
+    private var suppressHoverExpansionUntilExit = false
+    private var didExitDuringDrag = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
@@ -57,6 +62,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         panel.minSize = NSSize(width: 180, height: 112)
         panel.maxSize = NSSize(width: 560, height: 320)
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
+        panel.delegate = self
         let panelView = OpacityAdjustingHostingView(rootView: WidgetView(store: store))
         panelView.onOpacityDelta = { [weak self] deltaY in
             self?.adjustPanelOpacity(deltaY: deltaY, context: "panel-scroll")
@@ -79,12 +85,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         tabPanel.animationBehavior = .none
         tabPanel.level = TabPositioning.windowLevel
         tabPanel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
-        let tabView = DraggableTabHostingView(rootView: EdgeTabView(store: store))
+        let tabView = DraggableTabHostingView(rootView: EdgeTabView(store: store, presentation: tabPresentation))
         tabView.onClick = { [weak self] in
             self?.togglePanel()
         }
         tabView.onDoubleClick = { [weak self] in
-            self?.resetPanelOpacityAndShow()
+            self?.resetPanelPositionOpacityAndShow()
         }
         tabView.onOpacityDelta = { [weak self] deltaY in
             self?.adjustPanelOpacity(deltaY: deltaY, context: "tab-scroll")
@@ -93,11 +99,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             guard let tabView else { return }
             self?.showTabMenu(for: tabView, event: event)
         }
+        tabView.onHoverChanged = { [weak self] isHovering in
+            self?.handleTabHoverChanged(isHovering)
+        }
+        tabView.onDragStarted = { [weak self] in
+            self?.handleTabDragStarted()
+        }
         tabView.onMove = { [weak self] origin in
             self?.moveTab(to: origin)
         }
         tabView.onMoveEnded = { [weak self] in
-            self?.saveTabPosition()
+            self?.handleTabDragEnded()
         }
         tabPanel.contentView = tabView
         tabPanel.orderFrontRegardless()
@@ -128,14 +140,60 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         tabPanel.setFrameOrigin(constrainedOrigin(proposedOrigin, size: tabPanel.frame.size))
 
         if panel?.isVisible == true {
-            panel?.setFrame(frameNearTab(for: panel?.frame.size ?? panelSize), display: true)
+            setPanelFrame(frameNearTab(for: panel?.frame.size ?? panelSize))
             alignPanelToVisibleTab(context: "moveTab")
         }
     }
 
+    private func handleTabHoverChanged(_ isHovering: Bool) {
+        if isHovering {
+            guard !isTabDragging, !suppressHoverExpansionUntilExit else { return }
+            setTabMode(.expanded)
+        } else {
+            if isTabDragging {
+                didExitDuringDrag = true
+            }
+            suppressHoverExpansionUntilExit = false
+            setTabMode(.collapsed)
+        }
+    }
+
+    private func handleTabDragStarted() {
+        isTabDragging = true
+        didExitDuringDrag = false
+        suppressHoverExpansionUntilExit = true
+        setTabMode(.dragging)
+    }
+
+    private func handleTabDragEnded() {
+        isTabDragging = false
+        suppressHoverExpansionUntilExit = !didExitDuringDrag
+        didExitDuringDrag = false
+        setTabMode(.collapsed)
+        saveTabPosition()
+    }
+
+    private func setTabMode(_ mode: EdgeTabPresentationMode) {
+        tabPresentation.mode = mode
+        guard let tabPanel else { return }
+        let size = EdgeTabPresentation.size(for: mode)
+        guard tabPanel.frame.size != size else {
+            tabPanel.orderFrontRegardless()
+            return
+        }
+
+        let origin = resizedTabOrigin(from: tabPanel.frame, to: size)
+        tabPanel.setFrame(NSRect(origin: origin, size: size), display: true, animate: false)
+        if panel?.isVisible == true {
+            setPanelFrame(frameNearTab(for: panel?.frame.size ?? panelSize))
+            alignPanelToVisibleTab(context: "setTabMode")
+        }
+        tabPanel.orderFrontRegardless()
+    }
+
     private func showPanel(context: String) {
         guard let panel else { return }
-        panel.setFrame(frameNearTab(for: panel.frame.size), display: true)
+        setPanelFrame(frameNearTab(for: panel.frame.size))
         panel.orderFrontRegardless()
         tabPanel?.orderFrontRegardless()
         alignPanelToVisibleTab(context: context)
@@ -157,7 +215,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         setPanelOpacity(nextOpacity, showsHUD: true)
     }
 
-    private func resetPanelOpacityAndShow() {
+    private func resetPanelPositionOpacityAndShow() {
+        panelOffsetStore.reset()
         setPanelOpacity(1, showsHUD: true)
         store.refresh()
         showPanel(context: "tab-double-click")
@@ -189,6 +248,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             origin: TabPositioning.panelOrigin(
                 size: size,
                 anchor: anchor,
+                savedOffset: savedPanelOffset(),
                 visibleFrame: visibleFrame,
                 screenFrame: screenFrame
             ),
@@ -197,6 +257,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func frameForTab() -> NSRect {
+        let tabSize = EdgeTabPresentation.collapsedSize
         if let savedOrigin = savedTabOrigin() {
             return NSRect(
                 origin: constrainedOrigin(savedOrigin, size: tabSize),
@@ -231,6 +292,78 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             size: size,
             visibleFrame: visibleFrame(containing: rect),
             screenFrame: screenFrame(containing: rect)
+        )
+    }
+
+    private func setPanelFrame(_ frame: NSRect) {
+        guard let panel else { return }
+        isPositioningPanel = true
+        panel.setFrame(frame, display: true)
+        isPositioningPanel = false
+        saveCorrectedPanelOffsetIfNeeded(for: panel.frame)
+    }
+
+    private func handlePanelDidMove(_ notification: Notification) {
+        guard let movedWindow = notification.object as? NSWindow,
+              movedWindow === panel,
+              let panel,
+              !isPositioningPanel,
+              panel.isVisible
+        else {
+            return
+        }
+
+        let correctedFrame = constrainedPanelFrame(panel.frame)
+        if correctedFrame.origin != panel.frame.origin {
+            isPositioningPanel = true
+            panel.setFrame(correctedFrame, display: true)
+            isPositioningPanel = false
+        }
+        savePanelOffset(for: panel.frame)
+    }
+
+    func windowDidMove(_ notification: Notification) {
+        handlePanelDidMove(notification)
+    }
+
+    private func constrainedPanelFrame(_ frame: NSRect) -> NSRect {
+        let anchor = tabPanel?.frame ?? frameForTab()
+        return NSRect(
+            origin: TabPositioning.constrainedPanelOrigin(
+                frame.origin,
+                size: frame.size,
+                visibleFrame: visibleFrame(containing: anchor),
+                screenFrame: screenFrame(containing: anchor)
+            ),
+            size: frame.size
+        )
+    }
+
+    private var hasSavedPanelOffset: Bool {
+        panelOffsetStore.hasSavedOffset
+    }
+
+    private func savedPanelOffset() -> NSSize? {
+        panelOffsetStore.load()
+    }
+
+    private func saveCorrectedPanelOffsetIfNeeded(for panelFrame: NSRect) {
+        guard hasSavedPanelOffset else { return }
+        savePanelOffset(for: panelFrame)
+    }
+
+    private func savePanelOffset(for panelFrame: NSRect) {
+        let anchor = tabPanel?.frame ?? frameForTab()
+        let offset = TabPositioning.panelOffset(panelOrigin: panelFrame.origin, anchor: anchor)
+        panelOffsetStore.save(offset)
+    }
+
+    private func resizedTabOrigin(from frame: NSRect, to size: NSSize) -> NSPoint {
+        TabPositioning.resizedOrigin(
+            from: frame,
+            to: size,
+            visibleFrame: visibleFrame(containing: frame),
+            screenFrame: screenFrame(containing: frame)
         )
     }
 
@@ -271,6 +404,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func alignPanelToVisibleTabNow(context: String) {
         guard let panel, let tabPanel, panel.isVisible else { return }
+        guard !hasSavedPanelOffset else { return }
         let visibleFrame = visibleFrame(containing: tabPanel.frame)
         guard tabPanel.frame.maxY > visibleFrame.maxY else { return }
         guard let tabBounds = RuntimeWindowFrames.bounds(for: tabPanel.windowNumber),
@@ -280,7 +414,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
 
-        let delta = panelBounds.minY - tabBounds.maxY
+        let actualGap = panelBounds.minY - tabBounds.maxY
+        let delta = actualGap - TabPositioning.panelTopGap
         FrameDiagnostics.log(
             context: context,
             tabFrame: tabPanel.frame,
@@ -290,7 +425,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             delta: delta
         )
         guard abs(delta) > 1 else { return }
+        isPositioningPanel = true
         panel.setFrameOrigin(NSPoint(x: panel.frame.origin.x, y: panel.frame.origin.y + delta))
+        isPositioningPanel = false
     }
 }
 
@@ -346,7 +483,8 @@ enum FrameDiagnostics {
 
 enum TabPositioning {
     static let windowLevel = NSWindow.Level.statusBar
-    static let panelTopGap: CGFloat = 0
+    static let edgePadding: CGFloat = 8
+    static let panelTopGap: CGFloat = 4
 
     static func constrainedOrigin(
         _ origin: NSPoint,
@@ -355,32 +493,72 @@ enum TabPositioning {
         screenFrame: NSRect
     ) -> NSPoint {
         NSPoint(
-            x: min(max(visibleFrame.minX + 8, origin.x), visibleFrame.maxX - size.width - 8),
-            y: min(max(visibleFrame.minY + 8, origin.y), screenFrame.maxY - size.height)
+            x: min(max(visibleFrame.minX + edgePadding, origin.x), visibleFrame.maxX - size.width - edgePadding),
+            y: min(max(visibleFrame.minY + edgePadding, origin.y), screenFrame.maxY - size.height)
         )
     }
 
     static func panelOrigin(
         size: NSSize,
         anchor: NSRect,
+        savedOffset: NSSize? = nil,
         visibleFrame: NSRect,
         screenFrame: NSRect
     ) -> NSPoint {
-        let x = min(
-            max(visibleFrame.minX + 8, anchor.minX - size.width - 8),
-            visibleFrame.maxX - size.width - 12
+        let offset = savedOffset ?? defaultPanelOffset(size: size, anchor: anchor)
+        let proposedOrigin = NSPoint(
+            x: anchor.minX + offset.width,
+            y: anchor.minY + offset.height
         )
-        let y: CGFloat
-        if anchor.maxY > visibleFrame.maxY {
-            let top = min(anchor.minY - panelTopGap, screenFrame.maxY)
-            y = max(visibleFrame.minY + 12, top - size.height)
-        } else {
-            y = min(
-                max(visibleFrame.minY + 12, anchor.midY - size.height / 2),
-                visibleFrame.maxY - size.height - 12
-            )
-        }
-        return NSPoint(x: x, y: y)
+        return constrainedPanelOrigin(
+            proposedOrigin,
+            size: size,
+            visibleFrame: visibleFrame,
+            screenFrame: screenFrame
+        )
+    }
+
+    static func panelOffset(panelOrigin: NSPoint, anchor: NSRect) -> NSSize {
+        NSSize(
+            width: panelOrigin.x - anchor.minX,
+            height: panelOrigin.y - anchor.minY
+        )
+    }
+
+    static func constrainedPanelOrigin(
+        _ origin: NSPoint,
+        size: NSSize,
+        visibleFrame: NSRect,
+        screenFrame: NSRect
+    ) -> NSPoint {
+        NSPoint(
+            x: min(max(visibleFrame.minX + edgePadding, origin.x), visibleFrame.maxX - size.width - edgePadding),
+            y: min(max(screenFrame.minY + edgePadding, origin.y), screenFrame.maxY - size.height - edgePadding)
+        )
+    }
+
+    private static func defaultPanelOffset(size: NSSize, anchor: NSRect) -> NSSize {
+        NSSize(
+            width: anchor.width / 2 - size.width / 2,
+            height: -panelTopGap - size.height
+        )
+    }
+
+    static func resizedOrigin(
+        from currentFrame: NSRect,
+        to size: NSSize,
+        visibleFrame: NSRect,
+        screenFrame: NSRect
+    ) -> NSPoint {
+        let keepsRightEdge = currentFrame.midX >= visibleFrame.midX
+        let proposedX = keepsRightEdge ? currentFrame.maxX - size.width : currentFrame.minX
+        let proposedY = resizedY(from: currentFrame, toHeight: size.height, visibleFrame: visibleFrame, screenFrame: screenFrame)
+        return constrainedOrigin(
+            NSPoint(x: proposedX, y: proposedY),
+            size: size,
+            visibleFrame: visibleFrame,
+            screenFrame: screenFrame
+        )
     }
 
     static func adjustedOpacity(current: CGFloat, scrollDeltaY: CGFloat) -> CGFloat {
@@ -389,5 +567,22 @@ enum TabPositioning {
 
     static func opacityPercent(for opacity: CGFloat) -> Int {
         Int((min(max(opacity, 0), 1) * 100).rounded())
+    }
+
+    private static func resizedY(
+        from currentFrame: NSRect,
+        toHeight height: CGFloat,
+        visibleFrame: NSRect,
+        screenFrame: NSRect
+    ) -> CGFloat {
+        let tolerance: CGFloat = 0.5
+        let bottomLimit = visibleFrame.minY + 8
+        if currentFrame.maxY >= screenFrame.maxY - tolerance {
+            return currentFrame.maxY - height
+        }
+        if currentFrame.minY <= bottomLimit + tolerance {
+            return currentFrame.minY
+        }
+        return currentFrame.midY - height / 2
     }
 }
