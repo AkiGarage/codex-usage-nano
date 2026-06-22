@@ -17,7 +17,7 @@ Version: `0.0.3`
 
 ## Demo
 
-The GIFs show the primary interaction: the tab has three display states, can be dragged anywhere on screen, and opens the detail panel with one click. It is not a menu bar item, so you can move it away from the notch.
+The GIFs show the primary interaction: the tab has three display states, can be dragged anywhere on screen, and opens the detail panel with one click. It is not a menu bar item, so it stays clear of the MacBook notch.
 
 <table>
   <tr>
@@ -53,18 +53,18 @@ Codex Usage Nano is a lightweight macOS app for checking remaining Codex usage q
 
 On notched MacBook Air and MacBook Pro displays, menu bar apps can disappear behind the notch. Codex Usage Nano avoids that problem by staying out of the menu bar. It does not add a Dock icon or a menu bar item while running; it behaves like a tiny accessory app that stays visible only as a floating tab.
 
-This is a companion app for [steipete/CodexBar](https://github.com/steipete/CodexBar). CodexBar must be installed, but the CodexBar app does not need to be running while you use Codex Usage Nano. Codex Usage Nano does not bundle CodexBar, OpenAI credentials, cookies, or tokens; it calls the locally installed `CodexBarCLI` to read usage data.
+This is a companion app for [steipete/CodexBar](https://github.com/steipete/CodexBar). CodexBar must be installed, but the CodexBar app does not need to be running while Codex Usage Nano is in use. Codex Usage Nano does not bundle CodexBar, OpenAI credentials, cookies, or tokens; it calls the locally installed `CodexBarCLI` to read usage data.
 
 ## 2. What You See
 
 1. Two small color bars in the floating tab: top = Session, bottom = Weekly.
-2. A mouseover state that expands the tab vertically and shows the Session remaining percentage.
+2. A mouseover state that expands the tab vertically and shows a large Session remaining percentage.
 3. A one-click detail panel with Session and Weekly usage.
 4. Remaining percentage, reset timing, pace status, and projection text for each limit.
 5. Usage bars with 20% and 50% tick marks.
 6. A red expected-usage marker when CodexBar usage data contains pace context.
-7. Bar colors: cyan above 30%, yellow from 16% to 30%, and red at 15% or lower.
-8. Opacity mode: the tab percentage turns cyan while opacity is being adjusted, and the detail panel also shows an `OP <percent>%` badge.
+7. Bar colors: remaining tokens display cyan above 30%, yellow at 30% or below, and red at 15% or below.
+8. Detail-panel opacity shown as a percentage. The tab number changes from black to cyan, and the detail panel also shows an `OP <percent>%` badge in the top-right.
 9. A short error line when `CodexBarCLI` is missing or cannot return usage.
 
 ## 3. Main Features
@@ -72,9 +72,9 @@ This is a companion app for [steipete/CodexBar](https://github.com/steipete/Code
 1. Small floating tab with two color bars for Session and Weekly remaining tokens.
 2. Mouseover percentage display for quick Session checks without opening the panel.
 3. One-click detail panel for Session / Weekly reset timing, pace, projections, and bars.
-4. Drag-anywhere placement, including top-edge and menu-bar-adjacent positions for notched MacBooks.
-5. Saved tab position plus detail-panel placement that stays near the tab and remains onscreen.
-6. Resizable, movable detail panel with opacity adjustment and recovery from the tab.
+4. Drag-anywhere placement that stays clear of the MacBook notch.
+5. Saved tab position that is reused on next launch.
+6. Detail panel that can be dragged to move and dragged to resize.
 7. Automatic refresh every 60 seconds, plus manual refresh from the tab menu.
 8. Local privacy boundary: usage retrieval stays on this Mac through the installed `CodexBarCLI`.
 
@@ -85,7 +85,7 @@ This is a companion app for [steipete/CodexBar](https://github.com/steipete/Code
 3. CodexBar configured with a working `codex` provider.
 4. Swift toolchain if building from source.
 
-CodexBar must be installed, but it does not need to be running while you use Codex Usage Nano. The app calls the installed `CodexBarCLI` directly when it refreshes usage.
+CodexBar must be installed, but it does not need to be running while Codex Usage Nano is in use. The app calls the installed `CodexBarCLI` directly when it refreshes usage.
 
 If Swift tools are missing, install Xcode Command Line Tools first.
 
@@ -120,6 +120,8 @@ open -n /Applications/CodexUsageNano.app
 
 Double-click `CodexUsageNano.app` in `/Applications` (the Applications folder).
 
+If the downloaded app is blocked as unidentified, open System Settings > Privacy & Security and allow the app.
+
 You can also launch it from Terminal.
 
 ```bash
@@ -128,7 +130,7 @@ open -n /Applications/CodexUsageNano.app
 
 The app shows a small floating tab on screen.
 
-You can leave CodexBar closed while using Codex Usage Nano. The app calls the installed `CodexBarCLI` directly when it refreshes usage.
+You can leave CodexBar closed while Codex Usage Nano is in use. The app calls the installed `CodexBarCLI` directly when it refreshes usage.
 
 ### 6.2 Show or Hide the Detail Panel
 
@@ -141,39 +143,37 @@ Click the floating tab.
 
 Drag the floating tab. The position is saved and reused on next launch.
 
-You can place it near the top edge or menu bar area to keep usage visible without relying on a menu bar item.
+You can place it wherever the usage display is easiest to see, without relying on a menu bar item.
+
+Double-click the tab to reset the detail panel to 100% opacity, restore the default relationship between the tab and detail panel, and show the detail panel again.
 
 ### 6.4 Read the Tab
 
 The collapsed tab shows two small color bars. The top bar is Session, and the bottom bar is Weekly.
 
-Move the pointer over the tab to expand it vertically and show the Session remaining percentage. The normal percentage is black. While opacity is being adjusted, the tab number turns cyan, and the detail panel also shows an `OP <percent>%` badge so you can tell opacity mode apart from usage mode.
+Move the pointer over the tab to expand it vertically and show the Session remaining percentage. The normal percentage is black.
 
 Move the pointer away and the tab collapses back to the two color bars.
 
 ### 6.5 Move or Resize the Detail Panel
 
-Drag a panel corner. Text, spacing, bars, and markers scale with the panel.
+Drag the detail panel to move it anywhere you like.
 
-You can also drag the panel background to move the detail panel while it is visible.
+Drag a panel corner to resize the detail panel.
 
-### 6.6 Spaces and Fullscreen
-
-The floating tab and detail panel are configured to stay available across Spaces and fullscreen auxiliary contexts.
-
-### 6.7 Refresh Usage
+### 6.6 Refresh Usage
 
 Codex Usage Nano refreshes automatically every 60 seconds.
 
 To refresh immediately, right-click, two-finger tap, or Control-click the floating tab, then choose `Refresh`.
 
-### 6.8 Adjust Opacity
+### 6.7 Adjust Opacity
 
 Two-finger swipe over the detail panel. While adjusting opacity, the detail panel shows an `OP <percent>%` badge, and the tab percentage turns cyan instead of black.
 
 You can also adjust opacity from the floating tab. If the panel becomes too transparent to interact with, two-finger swipe on the tab or double-click the tab to recover it.
 
-### 6.9 Use the Tab Menu
+### 6.8 Use the Tab Menu
 
 Right-click, two-finger tap, or Control-click the floating tab to open the menu.
 
@@ -183,7 +183,7 @@ Right-click, two-finger tap, or Control-click the floating tab to open the menu.
 2. `Refresh`: update Codex usage immediately.
 3. `Quit Codex Usage Nano`: quit the app.
 
-### 6.10 Quit from Terminal
+### 6.9 Quit from Terminal
 
 ```bash
 pkill -x CodexUsageNano

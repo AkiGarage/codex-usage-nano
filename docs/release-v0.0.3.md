@@ -49,7 +49,7 @@ CodexUsageNano-0.0.3-macos.zip
 ## Codex Usage Nano 0.0.3
 
 This is a macOS-only release of Codex Usage Nano, a tiny draggable Codex usage
-tab for notched MacBooks.
+tab for MacBooks with a notch.
 
 ### Highlights
 
@@ -58,17 +58,15 @@ tab for notched MacBooks.
   - collapsed floating tab with Session / Weekly color bars,
   - mouseover percentage display for Session remaining tokens,
   - draggable floating tab with saved position,
-  - top-edge and menu-bar-adjacent placement,
   - one-click Session / Weekly detail panel,
   - saved detail-panel offset near the tab,
-  - detail panel movement by dragging the panel background,
-  - responsive detail panel resize,
-  - Spaces and fullscreen auxiliary behavior,
+  - detail panel movement by dragging,
+  - detail panel resize by dragging,
   - automatic refresh and manual refresh,
   - tab menu for show / hide, refresh, and quit,
   - two-finger opacity adjustment,
   - opacity recovery from the tab,
-  - double-click restore to 100% opacity,
+  - double-click restore for 100% opacity and the default tab / detail-panel relationship,
   - cyan opacity-mode display on the tab plus `OP <percent>%` on the detail panel,
   - local CodexBarCLI usage source and privacy boundary.
 - Added the app icon near the top of both README pages.
