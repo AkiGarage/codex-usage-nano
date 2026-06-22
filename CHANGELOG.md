@@ -12,7 +12,7 @@ All notable changes to Codex Usage Nano are documented here.
 - Added the app icon near the top of both README pages.
 - Rewrote the English and Japanese README pages with matching macOS-only `v0.0.3` content.
 - Updated the app and README to the latest floating-tab interaction: collapsed Session / Weekly color bars, mouseover percentage display, drag-anywhere placement, and one-click detail panel.
-- Documented opacity mode accurately: the tab percentage turns cyan while the detail panel shows an `OP <percent>%` badge.
+- Documented opacity mode accurately: the tab percentage turns cyan while the detail panel shows an `OP NN%` badge.
 - Documented CodexBar accurately: CodexBar must be installed, but the CodexBar app does not need to be running while Codex Usage Nano refreshes through `CodexBarCLI`.
 - Updated release install instructions for `CodexUsageNano-0.0.3-macos.zip`.
 
@@ -47,7 +47,7 @@ First stable release.
 - Panel opacity control with two-finger swipe.
 - Recovery path from the tab when the panel becomes too transparent to interact with.
 - Tab double-click to restore the panel at 100% opacity and reset the default tab / detail-panel relationship.
-- Distinct cyan `OP <percent>%` opacity display so opacity mode is not confused with normal usage display.
+- Distinct cyan `OP NN%` opacity display so opacity mode is not confused with normal usage display.
 - App icon and `/Applications`-friendly `.app` bundle metadata.
 - Beginner-friendly Japanese and English README.
 

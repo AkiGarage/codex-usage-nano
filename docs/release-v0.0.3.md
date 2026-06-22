@@ -67,7 +67,7 @@ tab for MacBooks with a notch.
   - two-finger opacity adjustment,
   - opacity recovery from the tab,
   - double-click restore for 100% opacity and the default tab / detail-panel relationship,
-  - cyan opacity-mode display on the tab plus `OP <percent>%` on the detail panel,
+  - cyan opacity-mode display on the tab plus `OP NN%` on the detail panel,
   - local CodexBarCLI usage source and privacy boundary.
 - Added the app icon near the top of both README pages.
 - Uses inline README GIFs and current screenshots for reliable GitHub rendering.

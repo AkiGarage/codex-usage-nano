@@ -64,7 +64,7 @@ This is a companion app for [steipete/CodexBar](https://github.com/steipete/Code
 5. Usage bars with 20% and 50% tick marks.
 6. A red expected-usage marker when CodexBar usage data contains pace context.
 7. Bar colors: remaining tokens display cyan above 30%, yellow at 30% or below, and red at 15% or below.
-8. Detail-panel opacity shown as a percentage. The tab number changes from black to cyan, and the detail panel also shows an `OP <percent>%` badge in the top-right.
+8. Detail-panel opacity shown as a percentage. The tab number changes from black to cyan, and the detail panel also shows an `OP NN%` badge in the top-right.
 9. A short error line when `CodexBarCLI` is missing or cannot return usage.
 
 ## 3. Main Features
@@ -169,7 +169,7 @@ To refresh immediately, right-click, two-finger tap, or Control-click the floati
 
 ### 6.7 Adjust Opacity
 
-Two-finger swipe over the detail panel. While adjusting opacity, the detail panel shows an `OP <percent>%` badge, and the tab percentage turns cyan instead of black.
+Two-finger swipe over the detail panel. While adjusting opacity, the detail panel shows an `OP NN%` badge, and the tab percentage turns cyan instead of black.
 
 You can also adjust opacity from the floating tab. If the panel becomes too transparent to interact with, two-finger swipe on the tab or double-click the tab to recover it.
 
