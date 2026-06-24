@@ -9,7 +9,13 @@
 
 Version: `0.0.4`
 
-## Codex Usage Nano is a small macOS app for checking remaining Codex usage at a glance. Its floating tab shows Session and Weekly remaining tokens with two internal color bars, reveals the Session remaining percentage on mouseover, and opens a compact Session / Weekly detail panel with one click. The detail panel can be moved, resized with native macOS edge and corner behavior, and reset without adding a Dock icon or menu bar item.
+## Codex usage at a glance
+
+Codex Usage Nano is a macOS app for checking remaining Codex usage at a glance.
+
+The small floating tab stays out of your way and can be placed anywhere on screen. It no longer disappears behind the MacBook notch.
+
+Two color bars inside the tab show Session and Weekly remaining tokens. Mouse over the tab to see the Session remaining percentage. Click once to open the detail panel.
 
 <p align="center">
   <img src="screenshots/app-icon.png" alt="Codex Usage Nano app icon" width="128">
