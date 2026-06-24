@@ -7,9 +7,9 @@
   </tr>
 </table>
 
-Version: `0.0.3`
+Version: `0.0.4`
 
-## Codex Usage Nano is a small macOS app for checking remaining Codex usage at a glance. Its small floating tab shows Session and Weekly remaining tokens with two internal color bars, shows the Session remaining percentage on mouseover, and opens detailed Session / Weekly information with one click. The minimal design stays out of your way and adds no Dock icon or menu bar item.
+## Codex Usage Nano is a small macOS app for checking remaining Codex usage at a glance. Its floating tab shows Session and Weekly remaining tokens with two internal color bars, reveals the Session remaining percentage on mouseover, and opens a compact Session / Weekly detail panel with one click. The detail panel can be moved, resized with native macOS edge and corner behavior, and reset without adding a Dock icon or menu bar item.
 
 <p align="center">
   <img src="screenshots/app-icon.png" alt="Codex Usage Nano app icon" width="128">
@@ -55,28 +55,37 @@ On notched MacBook Air and MacBook Pro displays, menu bar apps can disappear beh
 
 This is a companion app for [steipete/CodexBar](https://github.com/steipete/CodexBar). CodexBar must be installed, but the CodexBar app does not need to be running while Codex Usage Nano is in use. Codex Usage Nano does not bundle CodexBar, OpenAI credentials, cookies, or tokens; it calls the locally installed `CodexBarCLI` to read usage data.
 
+This public release is macOS-only. It does not include an iPhone app, iOS widget, sync backend, or CodexBar binary.
+
 ## 2. What You See
 
-1. Two small color bars in the floating tab: top = Session, bottom = Weekly.
-2. A mouseover state that expands the tab vertically and shows a large Session remaining percentage.
+1. Two small color bars in the collapsed floating tab: top = Session, bottom = Weekly.
+2. A mouseover state that keeps the same width, expands vertically, and shows a large Session remaining percentage.
 3. A one-click detail panel with Session and Weekly usage.
-4. Remaining percentage, reset timing, pace status, and projection text for each limit.
-5. Usage bars with 20% and 50% tick marks.
-6. A red expected-usage marker when CodexBar usage data contains pace context.
-7. Bar colors: remaining tokens display cyan above 30%, yellow at 30% or below, and red at 15% or below.
-8. Detail-panel opacity shown as a percentage. The tab number changes from black to cyan, and the detail panel also shows an `OP NN%` badge in the top-right.
-9. A short error line when `CodexBarCLI` is missing or cannot return usage.
+4. A compact default detail-panel size centered near the tab.
+5. Remaining percentage, reset timing, pace status, and projection text for each limit.
+6. Usage bars with 20% and 50% tick marks.
+7. A red expected-usage marker when CodexBar usage data contains pace context.
+8. Bar colors: remaining tokens display cyan above 30%, yellow at 30% or below, and red at 15% or below.
+9. Detail-panel opacity shown as a percentage. The expanded tab number turns cyan, and the detail panel also shows an `OP NN%` badge in the top-right.
+10. Native macOS resize cursors at the active panel edges and corners.
+11. A short error line when `CodexBarCLI` is missing or cannot return usage.
 
 ## 3. Main Features
 
 1. Small floating tab with two color bars for Session and Weekly remaining tokens.
 2. Mouseover percentage display for quick Session checks without opening the panel.
 3. One-click detail panel for Session / Weekly reset timing, pace, projections, and bars.
-4. Drag-anywhere placement that stays clear of the MacBook notch.
+4. Drag-anywhere tab placement that stays clear of the MacBook notch.
 5. Saved tab position that is reused on next launch.
-6. Detail panel that can be dragged to move and dragged to resize.
-7. Automatic refresh every 60 seconds, plus manual refresh from the tab menu.
-8. Local privacy boundary: usage retrieval stays on this Mac through the installed `CodexBarCLI`.
+6. Detail panel that opens close to the tab, stays onscreen near display edges, and remembers a moved tab-to-panel offset.
+7. Compact 75% default detail-panel size with responsive text, spacing, bars, and markers.
+8. Native macOS panel resize behavior from the active edges and corners.
+9. Panel double-click reset for the default panel size.
+10. Tab double-click restore for 100% opacity and the default tab / detail-panel relationship.
+11. Automatic refresh every 60 seconds, plus manual refresh from the tab menu.
+12. Optional local sanitized usage snapshot for future local integrations.
+13. Local privacy boundary: usage retrieval stays on this Mac through the installed `CodexBarCLI`.
 
 ## 4. Requirements
 
@@ -97,7 +106,7 @@ xcode-select --install
 
 ### 5.1 Use a Release Build
 
-1. Download `CodexUsageNano-0.0.3-macos.zip` from GitHub Releases.
+1. Download `CodexUsageNano-0.0.4-macos.zip` from GitHub Releases.
 2. Unzip it.
 3. Move `CodexUsageNano.app` to `/Applications`.
 4. Double-click `CodexUsageNano.app` in `/Applications` to launch it.
@@ -157,9 +166,11 @@ Move the pointer away and the tab collapses back to the two color bars.
 
 ### 6.5 Move or Resize the Detail Panel
 
-Drag the detail panel to move it anywhere you like.
+Drag the detail panel background to move it anywhere you like. The moved tab-to-panel relationship is saved and reused when the panel opens again.
 
-Drag a panel corner to resize the detail panel.
+Drag a panel edge or corner to resize the detail panel. The resize cursor appears only in the active native hit band, so cursor feedback matches the resize behavior. Text, spacing, bars, and markers scale with the panel.
+
+Double-click the detail panel to reset it to the compact default size. If the panel has not been moved away from its default relationship to the tab, the reset also restores that default relationship.
 
 ### 6.6 Refresh Usage
 
@@ -169,7 +180,7 @@ To refresh immediately, right-click, two-finger tap, or Control-click the floati
 
 ### 6.7 Adjust Opacity
 
-Two-finger swipe over the detail panel. While adjusting opacity, the detail panel shows an `OP NN%` badge, and the tab percentage turns cyan instead of black.
+Two-finger swipe over the detail panel. While adjusting opacity, the detail panel shows an `OP NN%` badge, and the expanded tab percentage turns cyan instead of black.
 
 You can also adjust opacity from the floating tab. If the panel becomes too transparent to interact with, two-finger swipe on the tab or double-click the tab to recover it.
 
@@ -213,7 +224,7 @@ trash /Applications/CodexUsageNano.app
 
 If `trash` is not installed, move `/Applications/CodexUsageNano.app` to Trash from Finder.
 
-Remove saved tab position and app settings.
+Remove saved tab position, panel offset, and app settings.
 
 ```bash
 defaults delete local.codex.CodexUsageNano
@@ -239,9 +250,9 @@ Check CodexBarCLI directly.
 
 If this command fails, fix the CodexBar configuration or login state first.
 
-### 9.3 The Tab Appears in a Strange Place
+### 9.3 The Tab or Panel Appears in a Strange Place
 
-Reset the saved position.
+Reset the saved position and panel offset.
 
 ```bash
 defaults delete local.codex.CodexUsageNano
@@ -261,7 +272,10 @@ If macOS blocks the downloaded app as unidentified, open System Settings > Priva
 1. Codex Usage Nano does not bundle CodexBar source code or binaries.
 2. Codex Usage Nano does not store OpenAI / Codex tokens, cookies, passwords, or credentials.
 3. Usage retrieval is delegated to the local `/Applications/CodexBar.app/Contents/Helpers/CodexBarCLI`.
-4. The app does not expose usage data through a LAN server.
+4. After a successful refresh, the app may write a sanitized local snapshot to `~/Library/Application Support/CodexUsageNano/latest-usage-snapshot.json` and `/private/tmp/codex-usage-nano/latest-usage-snapshot.json`.
+5. The local snapshot contains usage percentages, display text, marker percentages, and timestamps. It does not contain cookies, OpenAI tokens, email addresses, raw CodexBar output, or local user home paths.
+6. The app does not expose usage data through an unauthenticated broad LAN server.
+7. This release is macOS-only.
 
 ## 11. License and Credit
 

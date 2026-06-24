@@ -6,13 +6,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private let store = UsageStore(service: CodexUsageService())
     private let tabPresentation = EdgeTabPresentationState()
     private let panelOffsetStore = PanelOffsetStore()
-    private let panelSize = NSSize(width: 360, height: 190)
+    private let panelSize = TabPositioning.defaultPanelSize
     private let tabOriginXKey = "tabOriginX"
     private let tabOriginYKey = "tabOriginY"
+    private let debugOpenPanelOnLaunchKey = "debugOpenPanelOnLaunch"
     private var panel: NSPanel?
     private var tabPanel: NSPanel?
     private var isTabDragging = false
     private var isPositioningPanel = false
+    private var isPanelLiveResizing = false
+    private var hadSavedPanelOffsetAtResizeStart = false
     private var suppressHoverExpansionUntilExit = false
     private var didExitDuringDrag = false
 
@@ -21,6 +24,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         createPanel()
         createTabPanel()
         store.start()
+        showPanelOnLaunchIfRequested()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -40,10 +44,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         }
     }
 
+    private func showPanelOnLaunchIfRequested() {
+        guard UserDefaults.standard.bool(forKey: debugOpenPanelOnLaunchKey) else { return }
+        UserDefaults.standard.removeObject(forKey: debugOpenPanelOnLaunchKey)
+        DispatchQueue.main.async { [weak self] in
+            self?.store.refresh()
+            self?.showPanel(context: "debug-open-panel-on-launch")
+        }
+    }
+
     private func createPanel() {
         let panel = NSPanel(
             contentRect: frameNearTab(for: panelSize),
-            styleMask: [.nonactivatingPanel, .borderless, .resizable],
+            styleMask: [.borderless, .resizable],
             backing: .buffered,
             defer: false
         )
@@ -66,6 +79,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         let panelView = OpacityAdjustingHostingView(rootView: WidgetView(store: store))
         panelView.onOpacityDelta = { [weak self] deltaY in
             self?.adjustPanelOpacity(deltaY: deltaY, context: "panel-scroll")
+        }
+        panelView.onDoubleClick = { [weak self] in
+            self?.resetPanelSizeAndShow()
         }
         panel.contentView = panelView
         self.panel = panel
@@ -194,6 +210,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private func showPanel(context: String) {
         guard let panel else { return }
         setPanelFrame(frameNearTab(for: panel.frame.size))
+        NSApp.activate(ignoringOtherApps: true)
+        panel.makeKeyAndOrderFront(nil)
         panel.orderFrontRegardless()
         tabPanel?.orderFrontRegardless()
         alignPanelToVisibleTab(context: context)
@@ -220,6 +238,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         setPanelOpacity(1, showsHUD: true)
         store.refresh()
         showPanel(context: "tab-double-click")
+    }
+
+    private func resetPanelSizeAndShow() {
+        guard let panel else { return }
+        store.refresh()
+        let frame = NSRect(
+            origin: resetPanelOrigin(for: panelSize, currentFrame: panel.frame),
+            size: panelSize
+        )
+        setPanelFrame(frame)
+        NSApp.activate(ignoringOtherApps: true)
+        panel.makeKeyAndOrderFront(nil)
+        panel.orderFrontRegardless()
+        tabPanel?.orderFrontRegardless()
+        alignPanelToVisibleTab(context: "panel-double-click")
     }
 
     private func setPanelOpacity(_ opacity: CGFloat, showsHUD: Bool) {
@@ -313,17 +346,65 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             return
         }
 
-        let correctedFrame = constrainedPanelFrame(panel.frame)
-        if correctedFrame.origin != panel.frame.origin {
-            isPositioningPanel = true
-            panel.setFrame(correctedFrame, display: true)
-            isPositioningPanel = false
-        }
+        constrainPanelFrameIfNeeded(panel)
+        guard PanelOffsetPersistence.shouldSaveMoveOffset(isLiveResizing: isPanelLiveResizing) else { return }
         savePanelOffset(for: panel.frame)
     }
 
     func windowDidMove(_ notification: Notification) {
         handlePanelDidMove(notification)
+    }
+
+    func windowDidResize(_ notification: Notification) {
+        guard let resizedWindow = notification.object as? NSWindow,
+              resizedWindow === panel,
+              let panel,
+              !isPanelLiveResizing,
+              panel.isVisible
+        else {
+            return
+        }
+        guard PanelOffsetPersistence.shouldSaveResizeOffset(
+            hadSavedOffsetAtResizeStart: hasSavedPanelOffset
+        ) else { return }
+        savePanelOffset(for: panel.frame)
+    }
+
+    func windowWillStartLiveResize(_ notification: Notification) {
+        guard let resizedWindow = notification.object as? NSWindow,
+              resizedWindow === panel
+        else {
+            return
+        }
+        hadSavedPanelOffsetAtResizeStart = hasSavedPanelOffset
+        isPanelLiveResizing = true
+    }
+
+    func windowDidEndLiveResize(_ notification: Notification) {
+        guard let resizedWindow = notification.object as? NSWindow,
+              resizedWindow === panel,
+              let panel
+        else {
+            return
+        }
+        let shouldSaveOffset = PanelOffsetPersistence.shouldSaveResizeOffset(
+            hadSavedOffsetAtResizeStart: hadSavedPanelOffsetAtResizeStart
+        )
+        constrainPanelFrameIfNeeded(panel)
+        DispatchQueue.main.async { [weak self] in
+            self?.isPanelLiveResizing = false
+            self?.hadSavedPanelOffsetAtResizeStart = false
+        }
+        guard shouldSaveOffset else { return }
+        savePanelOffset(for: panel.frame)
+    }
+
+    private func constrainPanelFrameIfNeeded(_ panel: NSWindow) {
+        let correctedFrame = constrainedPanelFrame(panel.frame)
+        guard correctedFrame.origin != panel.frame.origin else { return }
+        isPositioningPanel = true
+        panel.setFrame(correctedFrame, display: true)
+        isPositioningPanel = false
     }
 
     private func constrainedPanelFrame(_ frame: NSRect) -> NSRect {
@@ -336,6 +417,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
                 screenFrame: screenFrame(containing: anchor)
             ),
             size: frame.size
+        )
+    }
+
+    private func resetPanelOrigin(for size: NSSize, currentFrame: NSRect) -> NSPoint {
+        let anchor = tabPanel?.frame ?? frameForTab()
+        let referenceFrame = hasSavedPanelOffset ? currentFrame : anchor
+        return TabPositioning.panelResetOrigin(
+            size: size,
+            currentFrame: currentFrame,
+            anchor: anchor,
+            hasSavedOffset: hasSavedPanelOffset,
+            visibleFrame: visibleFrame(containing: referenceFrame),
+            screenFrame: screenFrame(containing: referenceFrame)
         )
     }
 
@@ -445,6 +539,16 @@ enum RuntimeWindowFrames {
     }
 }
 
+enum PanelOffsetPersistence {
+    static func shouldSaveMoveOffset(isLiveResizing: Bool) -> Bool {
+        !isLiveResizing
+    }
+
+    static func shouldSaveResizeOffset(hadSavedOffsetAtResizeStart: Bool) -> Bool {
+        hadSavedOffsetAtResizeStart
+    }
+}
+
 enum FrameDiagnostics {
     static func log(
         context: String,
@@ -485,6 +589,14 @@ enum TabPositioning {
     static let windowLevel = NSWindow.Level.statusBar
     static let edgePadding: CGFloat = 8
     static let panelTopGap: CGFloat = 4
+    static let panelDesignSize = NSSize(width: 360, height: 190)
+    static let defaultPanelDisplayScale: CGFloat = 0.75
+    static var defaultPanelSize: NSSize {
+        NSSize(
+            width: panelDesignSize.width * defaultPanelDisplayScale,
+            height: panelDesignSize.height * defaultPanelDisplayScale
+        )
+    }
 
     static func constrainedOrigin(
         _ origin: NSPoint,
@@ -534,6 +646,35 @@ enum TabPositioning {
         NSPoint(
             x: min(max(visibleFrame.minX + edgePadding, origin.x), visibleFrame.maxX - size.width - edgePadding),
             y: min(max(screenFrame.minY + edgePadding, origin.y), screenFrame.maxY - size.height - edgePadding)
+        )
+    }
+
+    static func panelResetOrigin(
+        size: NSSize,
+        currentFrame: NSRect,
+        anchor: NSRect,
+        hasSavedOffset: Bool,
+        visibleFrame: NSRect,
+        screenFrame: NSRect
+    ) -> NSPoint {
+        guard hasSavedOffset else {
+            return panelOrigin(
+                size: size,
+                anchor: anchor,
+                visibleFrame: visibleFrame,
+                screenFrame: screenFrame
+            )
+        }
+
+        let proposedOrigin = NSPoint(
+            x: currentFrame.midX - size.width / 2,
+            y: currentFrame.midY - size.height / 2
+        )
+        return constrainedPanelOrigin(
+            proposedOrigin,
+            size: size,
+            visibleFrame: visibleFrame,
+            screenFrame: screenFrame
         )
     }
 

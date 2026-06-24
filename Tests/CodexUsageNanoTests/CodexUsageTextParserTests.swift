@@ -149,6 +149,39 @@ final class CodexUsageTextParserTests: XCTestCase {
         XCTAssertEqual(limit(15).tone, .critical)
     }
 
+    func testPublishedSnapshotUsesLocalContract() throws {
+        let snapshot = UsageSnapshot(
+            session: UsageLimit(
+                title: "Session",
+                leftPercent: 23.4,
+                resetText: "Resets in 54m",
+                detailText: "On pace",
+                projectionText: "Projected empty in 1h 13m",
+                markerPercent: 18.2
+            ),
+            weekly: UsageLimit(
+                title: "Weekly",
+                leftPercent: 77,
+                resetText: "Resets in 5d 23h",
+                detailText: "8% in deficit",
+                projectionText: "Runs out in 3d 11h",
+                markerPercent: 85
+            ),
+            updatedAt: ISO8601DateFormatter().date(from: "2026-06-07T06:00:00Z")!
+        )
+
+        let data = try UsageSnapshotPublisher.encodedData(for: snapshot)
+        let object = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+        let session = object?["session"] as? [String: Any]
+
+        XCTAssertEqual(object?["schemaVersion"] as? Int, 1)
+        XCTAssertEqual(object?["source"] as? String, "CodexBarCLI")
+        XCTAssertEqual(object?["updatedAt"] as? String, "2026-06-07T06:00:00Z")
+        XCTAssertEqual(session?["remainingPercent"] as? Int, 23)
+        XCTAssertEqual(session?["state"] as? String, "warning")
+        XCTAssertEqual(session?["markerPercent"] as? Int, 18)
+    }
+
     private func limit(_ leftPercent: Double) -> UsageLimit {
         UsageLimit(title: "Session", leftPercent: leftPercent, resetText: "Resets soon")
     }

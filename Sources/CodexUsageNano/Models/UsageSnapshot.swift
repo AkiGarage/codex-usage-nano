@@ -1,6 +1,6 @@
 import Foundation
 
-struct UsageSnapshot: Equatable {
+struct UsageSnapshot: Equatable, Sendable {
     let session: UsageLimit
     let weekly: UsageLimit
     let updatedAt: Date
@@ -12,7 +12,7 @@ struct UsageSnapshot: Equatable {
     )
 }
 
-struct UsageLimit: Equatable {
+struct UsageLimit: Equatable, Sendable {
     let title: String
     let leftPercent: Double
     let resetText: String
@@ -55,7 +55,7 @@ struct UsageLimit: Equatable {
     }
 }
 
-enum UsageTone: Equatable {
+enum UsageTone: Equatable, Sendable {
     case healthy
     case warning
     case critical

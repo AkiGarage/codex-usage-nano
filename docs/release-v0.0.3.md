@@ -102,8 +102,8 @@ or tokens. Usage retrieval stays local through the installed `CodexBarCLI`.
 - Verify `Support/Info.plist` contains `CFBundleShortVersionString` `0.0.3`.
 - Verify `README.md` and `README.ja.md` have matching structure and content.
 - Verify no tracked `iOS/` files remain.
-- Verify no private paths, secrets, `.env` files, credentials, or handoff files
-  are tracked.
+- Verify no private paths, secrets, credential files, or handoff files are
+  tracked.
 - Create `CodexUsageNano-0.0.3-macos.zip`.
 - Record the SHA256 for the zip.
 - Re-fetch repository, tag, release, and Actions state before publishing.

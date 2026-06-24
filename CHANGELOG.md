@@ -2,6 +2,20 @@
 
 All notable changes to Codex Usage Nano are documented here.
 
+## 0.0.4 - 2026-06-24
+
+### Changed
+
+- Ported the latest macOS detail-panel behavior into the public Nano release surface.
+- Reduced the default detail-panel size to 75% of the original design size.
+- Added detail-panel double-click reset for the default panel size.
+- Restored native macOS panel resize behavior from active edges and corners.
+- Tightened resize cursor hit regions so cursor feedback matches actual resize behavior.
+- Avoided compile-time references to newer AppKit resize cursor APIs so older macOS SDK CI runners can build.
+- Added local sanitized usage snapshot publishing after successful refreshes.
+- Updated the English and Japanese README pages with matching `v0.0.4` content, current install asset names, resize behavior, reset behavior, and privacy notes.
+- Added runtime verification scripts for resize cursor display and resize interaction.
+
 ## 0.0.3 - 2026-06-22
 
 ### Changed

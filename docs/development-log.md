@@ -1,5 +1,23 @@
 # Development Log
 
+## 2026-06-24
+
+- Prepared the local public `v0.0.4` release snapshot without publishing.
+- Ported the latest private macOS implementation into the public Nano tree:
+  compact 75% default detail-panel size, panel double-click size reset, native
+  edge/corner resize cursors, tightened native hit-band cursor regions, and
+  older-SDK-safe dynamic AppKit resize cursor lookup.
+- Added `UsageSnapshotPublisher` so successful refreshes write a sanitized
+  local JSON snapshot under Application Support and `/private/tmp`.
+- Updated `CFBundleShortVersionString` to `0.0.4`.
+- Updated `README.md` and `README.ja.md` with matching public `v0.0.4`
+  content, including macOS-only scope, resize/reset behavior, local snapshot
+  privacy notes, and the `CodexUsageNano-0.0.4-macos.zip` asset name.
+- Added `docs/release-v0.0.4.md` as the draft release note and pre-publish
+  checklist.
+- Publishing, pushing, tag creation, and release asset upload remain pending
+  explicit maintainer approval.
+
 ## 2026-06-22
 
 - Prepared the public `v0.0.3` release as a macOS-only release.

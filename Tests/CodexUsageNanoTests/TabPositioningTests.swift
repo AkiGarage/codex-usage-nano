@@ -24,6 +24,62 @@ final class TabPositioningTests: XCTestCase {
         XCTAssertEqual(EdgeTabPresentation.size(for: .expanded), CGSize(width: 52, height: 30))
     }
 
+    func testDefaultPanelSizeIsSeventyFivePercentOfDesignSize() {
+        XCTAssertEqual(TabPositioning.panelDesignSize, NSSize(width: 360, height: 190))
+        XCTAssertEqual(TabPositioning.defaultPanelDisplayScale, 0.75)
+        XCTAssertEqual(TabPositioning.defaultPanelSize, NSSize(width: 270, height: 142.5))
+    }
+
+    func testPanelSizeResetUsesDefaultTabRelationWithoutSavedOffset() {
+        let visibleFrame = NSRect(x: 0, y: 0, width: 1470, height: 923)
+        let screenFrame = NSRect(x: 0, y: 0, width: 1470, height: 956)
+        let tabFrame = NSRect(x: 709, y: 926, width: 52, height: 30)
+        let resizedDefaultFrame = NSRect(x: 544, y: 686, width: 360, height: 236)
+        let defaultSize = TabPositioning.defaultPanelSize
+
+        let origin = TabPositioning.panelResetOrigin(
+            size: defaultSize,
+            currentFrame: resizedDefaultFrame,
+            anchor: tabFrame,
+            hasSavedOffset: false,
+            visibleFrame: visibleFrame,
+            screenFrame: screenFrame
+        )
+
+        XCTAssertEqual(origin.x + defaultSize.width / 2, tabFrame.midX)
+        XCTAssertEqual(origin.y + defaultSize.height + TabPositioning.panelTopGap, tabFrame.minY)
+    }
+
+    func testPanelSizeResetKeepsCurrentCenterWithSavedOffset() {
+        let visibleFrame = NSRect(x: 0, y: 0, width: 1470, height: 923)
+        let screenFrame = NSRect(x: 0, y: 0, width: 1470, height: 956)
+        let tabFrame = NSRect(x: 1200, y: 760, width: 52, height: 30)
+        let currentFrame = NSRect(x: 992, y: 470, width: 270, height: 179)
+        let defaultSize = TabPositioning.defaultPanelSize
+
+        let origin = TabPositioning.panelResetOrigin(
+            size: defaultSize,
+            currentFrame: currentFrame,
+            anchor: tabFrame,
+            hasSavedOffset: true,
+            visibleFrame: visibleFrame,
+            screenFrame: screenFrame
+        )
+
+        XCTAssertEqual(origin.x + defaultSize.width / 2, currentFrame.midX)
+        XCTAssertEqual(origin.y + defaultSize.height / 2, currentFrame.midY)
+    }
+
+    func testPanelOffsetPersistenceIgnoresMoveEventsDuringLiveResize() {
+        XCTAssertFalse(PanelOffsetPersistence.shouldSaveMoveOffset(isLiveResizing: true))
+        XCTAssertTrue(PanelOffsetPersistence.shouldSaveMoveOffset(isLiveResizing: false))
+    }
+
+    func testPanelOffsetPersistenceOnlySavesResizeWhenCustomOffsetAlreadyExisted() {
+        XCTAssertFalse(PanelOffsetPersistence.shouldSaveResizeOffset(hadSavedOffsetAtResizeStart: false))
+        XCTAssertTrue(PanelOffsetPersistence.shouldSaveResizeOffset(hadSavedOffsetAtResizeStart: true))
+    }
+
     func testTabWindowLevelCanOccupyMenuBarArea() {
         XCTAssertEqual(TabPositioning.windowLevel, .statusBar)
         XCTAssertGreaterThan(TabPositioning.windowLevel.rawValue, NSWindow.Level.floating.rawValue)
@@ -125,6 +181,44 @@ final class TabPositioningTests: XCTestCase {
         XCTAssertEqual(TabPositioning.opacityPercent(for: 0.754), 75)
         XCTAssertEqual(TabPositioning.opacityPercent(for: 1.4), 100)
         XCTAssertEqual(TabPositioning.opacityPercent(for: -0.2), 0)
+    }
+
+    func testPanelResizeCursorRegionsCoverEdgesAndCorners() {
+        let bounds = NSRect(x: 0, y: 0, width: 270, height: 142.5)
+        let regions = PanelResizeCursorRegion.regions(in: bounds, isFlipped: false)
+        let rectsByPlacement = Dictionary(uniqueKeysWithValues: regions.map { ($0.placement, $0.rect) })
+
+        XCTAssertEqual(regions.map(\.placement), PanelResizeCursorRegion.Placement.allCases)
+        XCTAssertEqual(rectsByPlacement[.topLeft], NSRect(x: 0, y: 139.5, width: 3, height: 3))
+        XCTAssertEqual(rectsByPlacement[.top], NSRect(x: 3, y: 139.5, width: 264, height: 3))
+        XCTAssertEqual(rectsByPlacement[.topRight], NSRect(x: 267, y: 139.5, width: 3, height: 3))
+        XCTAssertEqual(rectsByPlacement[.right], NSRect(x: 267, y: 3, width: 3, height: 136.5))
+        XCTAssertEqual(rectsByPlacement[.bottomRight], NSRect(x: 267, y: 0, width: 3, height: 3))
+        XCTAssertEqual(rectsByPlacement[.bottom], NSRect(x: 3, y: 0, width: 264, height: 3))
+        XCTAssertEqual(rectsByPlacement[.bottomLeft], NSRect(x: 0, y: 0, width: 3, height: 3))
+        XCTAssertEqual(rectsByPlacement[.left], NSRect(x: 0, y: 3, width: 3, height: 136.5))
+    }
+
+    func testPanelResizeCursorRegionsPreservePhysicalTopWhenViewIsFlipped() {
+        let bounds = NSRect(x: 0, y: 0, width: 270, height: 142.5)
+        let regions = PanelResizeCursorRegion.regions(in: bounds, isFlipped: true)
+        let rectsByPlacement = Dictionary(uniqueKeysWithValues: regions.map { ($0.placement, $0.rect) })
+
+        XCTAssertEqual(rectsByPlacement[.topLeft], NSRect(x: 0, y: 0, width: 3, height: 3))
+        XCTAssertEqual(rectsByPlacement[.top], NSRect(x: 3, y: 0, width: 264, height: 3))
+        XCTAssertEqual(rectsByPlacement[.bottom], NSRect(x: 3, y: 139.5, width: 264, height: 3))
+        XCTAssertEqual(rectsByPlacement[.bottomLeft], NSRect(x: 0, y: 139.5, width: 3, height: 3))
+    }
+
+    func testPanelResizeCursorHitTestingOnlyMatchesPanelPerimeter() {
+        let bounds = NSRect(x: 0, y: 0, width: 270, height: 142.5)
+
+        XCTAssertNotNil(PanelResizeCursorRegion.cursor(at: NSPoint(x: 1, y: 1), in: bounds, isFlipped: false))
+        XCTAssertNotNil(PanelResizeCursorRegion.cursor(at: NSPoint(x: 268, y: 141), in: bounds, isFlipped: false))
+        XCTAssertNil(PanelResizeCursorRegion.cursor(at: NSPoint(x: 4, y: 4), in: bounds, isFlipped: false))
+        XCTAssertNil(PanelResizeCursorRegion.cursor(at: NSPoint(x: 266, y: 138), in: bounds, isFlipped: false))
+        XCTAssertNil(PanelResizeCursorRegion.cursor(at: NSPoint(x: 266, y: 70), in: bounds, isFlipped: false))
+        XCTAssertNil(PanelResizeCursorRegion.cursor(at: NSPoint(x: 135, y: 70), in: bounds, isFlipped: false))
     }
 
     func testTabCanReachScreenTopAboveVisibleFrame() {

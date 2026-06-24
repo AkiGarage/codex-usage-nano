@@ -8,11 +8,18 @@ final class UsageStore: ObservableObject {
     @Published private(set) var opacityHUDPercent: Int?
 
     private let service: CodexUsageService
+    private let publisher: UsageSnapshotPublisher?
     private var refreshTask: Task<Void, Never>?
     private var opacityHUDTask: Task<Void, Never>?
 
     init(service: CodexUsageService) {
         self.service = service
+        do {
+            publisher = try UsageSnapshotPublisher()
+        } catch {
+            publisher = nil
+            errorMessage = "Local snapshot publisher unavailable: \(error.localizedDescription)"
+        }
     }
 
     func start() {
@@ -66,8 +73,18 @@ final class UsageStore: ObservableObject {
         case let .success(snapshot):
             self.snapshot = snapshot
             errorMessage = nil
+            publish(snapshot)
         case let .failure(error):
             errorMessage = error.localizedDescription
+        }
+    }
+
+    private func publish(_ snapshot: UsageSnapshot) {
+        guard let publisher else { return }
+        do {
+            try publisher.publish(snapshot)
+        } catch {
+            errorMessage = "Local snapshot update failed: \(error.localizedDescription)"
         }
     }
 }
