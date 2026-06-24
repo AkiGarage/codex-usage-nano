@@ -4,9 +4,9 @@
 
 - Prepared the local public `v0.0.4` release snapshot without publishing.
 - Ported the latest private macOS implementation into the public Nano tree:
-  compact 75% default detail-panel size, panel double-click size reset, native
-  edge/corner resize cursors, tightened native hit-band cursor regions, and
-  older-SDK-safe dynamic AppKit resize cursor lookup.
+  compact default detail-panel size, panel double-click size reset,
+  edge/corner resizing, clearer resize feedback, and older-SDK-safe dynamic
+  AppKit resize cursor lookup.
 - Added `UsageSnapshotPublisher` so successful refreshes write a sanitized
   local JSON snapshot under Application Support and `/private/tmp`.
 - Updated `CFBundleShortVersionString` to `0.0.4`.
