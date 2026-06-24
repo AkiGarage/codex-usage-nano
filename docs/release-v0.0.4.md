@@ -14,10 +14,10 @@ It includes:
 - the current Codex Usage Nano macOS app,
 - updated English and Japanese README pages with matching content,
 - the inline README demo GIFs, current screenshots, tab-menu screenshot, and app icon,
-- compact 75% default detail-panel size,
+- compact default detail-panel size,
 - panel double-click reset for the default panel size,
 - native macOS detail-panel resize behavior from active edges and corners,
-- tightened resize cursor hit regions that match actual resize behavior,
+- clearer resize feedback at the active edges and corners,
 - older-SDK-safe dynamic AppKit resize cursor lookup,
 - local sanitized usage snapshot publishing after successful refreshes,
 - runtime verification scripts for resize cursor display and resize interaction,
@@ -62,9 +62,8 @@ tab for MacBooks with a notch.
 
 - Updated both English and Japanese README pages with matching `v0.0.4` content.
 - Added the latest detail-panel behavior:
-  - compact 75% default panel size,
+  - compact default detail-panel size,
   - native macOS resize behavior from active edges and corners,
-  - resize cursor feedback that matches the actual resize hit band,
   - panel double-click reset for the default panel size,
   - tab double-click restore for 100% opacity and the default tab / panel relationship.
 - Kept the floating tab workflow:
