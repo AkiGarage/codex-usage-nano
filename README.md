@@ -85,7 +85,7 @@ This public release is macOS-only. It does not include an iPhone app, iOS widget
 4. Drag-anywhere tab placement that stays clear of the MacBook notch.
 5. Saved tab position that is reused on next launch.
 6. Detail panel that opens close to the tab, stays onscreen near display edges, and remembers a moved tab-to-panel offset.
-7. Compact 75% default detail-panel size with responsive text, spacing, bars, and markers.
+7. Compact detail panel with resize support.
 8. Native macOS panel resize behavior from the active edges and corners.
 9. Panel double-click reset for the default panel size.
 10. Tab double-click restore for 100% opacity and the default tab / detail-panel relationship.
@@ -172,11 +172,11 @@ Move the pointer away and the tab collapses back to the two color bars.
 
 ### 6.5 Move or Resize the Detail Panel
 
-Drag the detail panel background to move it anywhere you like. The moved tab-to-panel relationship is saved and reused when the panel opens again.
+Drag the detail panel anywhere you like. Its relationship to the tab is saved, so the panel opens in the same place next time. Double-click the tab to reset that relationship.
 
-Drag a panel edge or corner to resize the detail panel. The resize cursor appears only in the active native hit band, so cursor feedback matches the resize behavior. Text, spacing, bars, and markers scale with the panel.
+Drag a panel edge or corner to resize it.
 
-Double-click the detail panel to reset it to the compact default size. If the panel has not been moved away from its default relationship to the tab, the reset also restores that default relationship.
+Double-click the detail panel to return it to the compact default size.
 
 ### 6.6 Refresh Usage
 
