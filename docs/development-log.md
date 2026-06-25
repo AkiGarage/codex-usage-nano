@@ -2,8 +2,7 @@
 
 ## 2026-06-25
 
-- Prepared the local public `v0.0.5` release branch without pushing, tagging,
-  or publishing.
+- Prepared the public `v0.0.5` release branch and opened draft PR `#7`.
 - Ported the latest macOS visual refresh into the public Nano tree: translucent
   glass-style floating tab, detail panel, opacity HUD, and usage bars while
   preserving the existing no-menu-bar primary UX and macOS 14 compatibility.
@@ -14,8 +13,10 @@
   `v0.0.5` release text and the `CodexUsageNano-0.0.5-macos.zip` asset name.
 - Added `docs/release-v0.0.5.md` as the draft release note and pre-publish
   checklist.
-- Publishing, pushing, tag creation, and release asset upload remain pending
-  explicit maintainer approval.
+- GitHub PR checks passed on PR `#7`.
+- README / README.ja GitHub-rendered visual approval, tag creation, release
+  asset upload, and GitHub Release publishing remain pending explicit
+  maintainer approval.
 
 ## 2026-06-24
 
