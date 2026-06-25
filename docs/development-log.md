@@ -1,5 +1,22 @@
 # Development Log
 
+## 2026-06-25
+
+- Prepared the local public `v0.0.5` release branch without pushing, tagging,
+  or publishing.
+- Ported the latest macOS visual refresh into the public Nano tree: translucent
+  glass-style floating tab, detail panel, opacity HUD, and usage bars while
+  preserving the existing no-menu-bar primary UX and macOS 14 compatibility.
+- Ported the zero-percent tab bar fix so exactly 0% remaining leaves no colored
+  sliver in the collapsed tab.
+- Updated `CFBundleShortVersionString` to `0.0.5`.
+- Updated `README.md`, `README.ja.md`, and `CHANGELOG.md` with matching public
+  `v0.0.5` release text and the `CodexUsageNano-0.0.5-macos.zip` asset name.
+- Added `docs/release-v0.0.5.md` as the draft release note and pre-publish
+  checklist.
+- Publishing, pushing, tag creation, and release asset upload remain pending
+  explicit maintainer approval.
+
 ## 2026-06-24
 
 - Prepared the local public `v0.0.4` release snapshot without publishing.

@@ -7,7 +7,7 @@
   </tr>
 </table>
 
-Version: `0.0.4`
+Version: `0.0.5`
 
 ## Codex usage at a glance
 
@@ -74,8 +74,9 @@ This public release is macOS-only. It does not include an iPhone app, iOS widget
 7. A red expected-usage marker when CodexBar usage data contains pace context.
 8. Bar colors: remaining tokens display cyan above 30%, yellow at 30% or below, and red at 15% or below.
 9. Detail-panel opacity shown as a percentage. The expanded tab number turns cyan, and the detail panel also shows an `OP NN%` badge in the top-right.
-10. Native macOS resize cursors at the active panel edges and corners.
-11. A short error line when `CodexBarCLI` is missing or cannot return usage.
+10. Translucent glass-style surfaces for the floating tab, detail panel, opacity HUD, and usage bars.
+11. Native macOS resize cursors at the active panel edges and corners.
+12. A short error line when `CodexBarCLI` is missing or cannot return usage.
 
 ## 3. Main Features
 
@@ -91,7 +92,8 @@ This public release is macOS-only. It does not include an iPhone app, iOS widget
 10. Tab double-click restore for 100% opacity and the default tab / detail-panel relationship.
 11. Automatic refresh every 60 seconds, plus manual refresh from the tab menu.
 12. Optional local sanitized usage snapshot for future local integrations.
-13. Local privacy boundary: usage retrieval stays on this Mac through the installed `CodexBarCLI`.
+13. Zero-percent remaining bars collapse fully to the neutral track instead of leaving a colored sliver.
+14. Local privacy boundary: usage retrieval stays on this Mac through the installed `CodexBarCLI`.
 
 ## 4. Requirements
 
@@ -112,7 +114,7 @@ xcode-select --install
 
 ### 5.1 Use a Release Build
 
-1. Download `CodexUsageNano-0.0.4-macos.zip` from GitHub Releases.
+1. Download `CodexUsageNano-0.0.5-macos.zip` from GitHub Releases.
 2. Unzip it.
 3. Move `CodexUsageNano.app` to `/Applications`.
 4. Double-click `CodexUsageNano.app` in `/Applications` to launch it.
@@ -166,7 +168,7 @@ Double-click the tab to reset the detail panel to 100% opacity, restore the defa
 
 The collapsed tab shows two small color bars. The top bar is Session, and the bottom bar is Weekly.
 
-Move the pointer over the tab to expand it vertically and show the Session remaining percentage. The normal percentage is black.
+Move the pointer over the tab to expand it vertically and show the Session remaining percentage. The normal percentage uses the system text color.
 
 Move the pointer away and the tab collapses back to the two color bars.
 

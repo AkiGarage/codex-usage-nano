@@ -27,29 +27,30 @@ struct WidgetView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
         .frame(minWidth: 180, idealWidth: baseWidth, maxWidth: .infinity, minHeight: 103, idealHeight: baseHeight, maxHeight: .infinity, alignment: .topLeading)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .stroke(.primary.opacity(0.08), lineWidth: 1)
-        )
+        .background {
+            LiquidGlassSurface(
+                shape: RoundedRectangle(cornerRadius: 17, style: .continuous),
+                tint: .white,
+                intensity: .panel
+            )
+        }
         .overlay(alignment: .topTrailing) {
             if let opacityPercent = store.opacityHUDPercent {
                 Text("OP \(opacityPercent)%")
-                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                    .font(.system(size: 10, weight: .bold, design: .rounded))
                     .monospacedDigit()
                     .foregroundStyle(opacityColor)
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 4)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
                     .background {
-                        Capsule()
-                            .fill(opacityColor.opacity(0.16))
-                            .background(.thinMaterial, in: Capsule())
+                        LiquidGlassSurface(
+                            shape: Capsule(),
+                            tint: opacityColor,
+                            intensity: .hud
+                        )
                     }
-                    .overlay(
-                        Capsule()
-                            .stroke(opacityColor.opacity(0.45), lineWidth: 1)
-                    )
-                    .padding(8)
+                    .padding(.top, 5)
+                    .padding(.trailing, 6)
             }
         }
     }
