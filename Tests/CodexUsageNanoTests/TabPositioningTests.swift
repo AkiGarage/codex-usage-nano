@@ -24,6 +24,17 @@ final class TabPositioningTests: XCTestCase {
         XCTAssertEqual(EdgeTabPresentation.size(for: .expanded), CGSize(width: 52, height: 30))
     }
 
+    func testEdgeTabUsageBarHasNoFillAtZeroPercent() {
+        XCTAssertEqual(EdgeTabUsageBarLayout.fillWidth(for: 0, in: 36), 0)
+        XCTAssertEqual(EdgeTabUsageBarLayout.fillWidth(for: -5, in: 36), 0)
+    }
+
+    func testEdgeTabUsageBarKeepsLowNonzeroPercentVisible() {
+        XCTAssertEqual(EdgeTabUsageBarLayout.fillWidth(for: 1, in: 36), 4)
+        XCTAssertEqual(EdgeTabUsageBarLayout.fillWidth(for: 100, in: 36), 36)
+        XCTAssertEqual(EdgeTabUsageBarLayout.fillWidth(for: 150, in: 36), 36)
+    }
+
     func testDefaultPanelSizeIsSeventyFivePercentOfDesignSize() {
         XCTAssertEqual(TabPositioning.panelDesignSize, NSSize(width: 360, height: 190))
         XCTAssertEqual(TabPositioning.defaultPanelDisplayScale, 0.75)

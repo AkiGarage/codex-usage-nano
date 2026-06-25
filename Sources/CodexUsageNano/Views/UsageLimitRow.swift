@@ -58,12 +58,24 @@ private struct UsageBar: View {
     var body: some View {
         GeometryReader { proxy in
             let width = proxy.size.width
+            let filledWidth = fillWidth(in: width)
             ZStack(alignment: .leading) {
-                Capsule()
-                    .fill(.secondary.opacity(0.12))
-                Capsule()
-                    .fill(fillColor)
-                    .frame(width: width * percent / 100)
+                LiquidGlassSurface(
+                    shape: Capsule(),
+                    tint: .white,
+                    intensity: .barTrack
+                )
+                if filledWidth > 0 {
+                    Capsule()
+                        .fill(fillGradient)
+                        .frame(width: filledWidth)
+                        .shadow(color: fillColor.opacity(0.12), radius: 1.0 * scale, x: 0, y: 0)
+                        .overlay(alignment: .top) {
+                            Capsule()
+                                .fill(.white.opacity(0.12))
+                                .frame(height: max(1, 1.2 * scale))
+                        }
+                    }
                 tick(at: 0.20, width: width)
                 tick(at: 0.50, width: width)
                 if let markerPercent {
@@ -84,17 +96,51 @@ private struct UsageBar: View {
         }
     }
 
+    private var fillGradient: LinearGradient {
+        LinearGradient(
+            colors: [
+                fillColor.opacity(0.95),
+                fillColor.opacity(0.82)
+            ],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+
+    private var markerColor: Color {
+        Color(red: 0.95, green: 0.24, blue: 0.20)
+    }
+
+    private var markerGradient: LinearGradient {
+        LinearGradient(
+            colors: [
+                .white.opacity(0.38),
+                markerColor
+            ],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+
     private func tick(at position: Double, width: Double) -> some View {
-        Rectangle()
-            .fill(.primary.opacity(0.34))
-            .frame(width: max(1, scale), height: 5 * scale)
+        Capsule()
+            .fill(.primary.opacity(0.26))
+            .frame(width: max(1, scale), height: 4.5 * scale)
             .offset(x: width * position)
     }
 
     private func warningMarker(at percent: Double, width: Double) -> some View {
-        Rectangle()
-            .fill(Color(red: 0.95, green: 0.24, blue: 0.20))
-            .frame(width: max(1, 2 * scale), height: 8 * scale)
-            .offset(x: max(0, min(width - max(1, 2 * scale), width * percent / 100)))
+        let markerWidth = max(1, 2 * scale)
+        let markerOffset = max(0, min(width - markerWidth, width * percent / 100))
+
+        return Capsule()
+            .fill(markerGradient)
+            .frame(width: markerWidth, height: 8 * scale)
+            .shadow(color: markerColor.opacity(0.18), radius: scale, x: 0, y: 0)
+            .offset(x: markerOffset)
+    }
+
+    private func fillWidth(in width: CGFloat) -> CGFloat {
+        max(0, min(width, width * percent / 100))
     }
 }

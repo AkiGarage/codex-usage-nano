@@ -2,6 +2,18 @@
 
 All notable changes to Codex Usage Nano are documented here.
 
+## 0.0.5 - 2026-06-25
+
+### Changed
+
+- Refreshed the floating tab, detail panel, opacity HUD, and usage bars with translucent glass-style macOS surfaces while keeping macOS 14 compatibility.
+- Reduced the painted-gradient look of the detail panel so underlying desktop content reads more naturally through the material.
+- Updated English and Japanese README install/version text for the `v0.0.5` release asset.
+
+### Fixed
+
+- Fixed the collapsed tab usage bars so exactly 0% remaining shows a neutral track with no colored sliver.
+
 ## 0.0.4 - 2026-06-24
 
 ### Changed
