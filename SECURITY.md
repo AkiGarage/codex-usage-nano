@@ -4,9 +4,13 @@
 
 Please do not report security vulnerabilities in public issues.
 
-Use GitHub private vulnerability reporting if it is enabled for this repository,
-or contact a maintainer through the repository owner's configured GitHub
-contact path.
+Use GitHub private vulnerability reporting if it is enabled for this
+repository.
+
+If private vulnerability reporting is not available, open a public issue that
+asks the maintainers for a private contact method. Do not include vulnerability
+details, proof-of-concept steps, logs, secrets, affected-account information, or
+other sensitive details in that public issue.
 
 ## Automation Policy
 
