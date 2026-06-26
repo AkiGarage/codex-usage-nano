@@ -5,8 +5,8 @@
 Please do not report security vulnerabilities in public issues.
 
 Use GitHub private vulnerability reporting if it is enabled for this repository,
-or contact the maintainers through the security contact listed in the project
-README.
+or contact a maintainer through the repository owner's configured GitHub
+contact path.
 
 ## Automation Policy
 

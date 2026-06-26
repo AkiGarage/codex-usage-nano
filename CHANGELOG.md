@@ -2,6 +2,13 @@
 
 All notable changes to Codex Usage Nano are documented here.
 
+## Unreleased
+
+### Changed
+
+- Rewrote the English and Japanese README pages around the current macOS app, with latest-release install links instead of hardcoded version text.
+- Clarified the vulnerability reporting path without promising a README security contact.
+
 ## 0.0.5 - 2026-06-25
 
 ### Changed

@@ -1,127 +1,79 @@
 # Codex Usage Nano
 
-<table>
-  <tr>
-    <td><a href="README.md">English</a></td>
-    <td><strong>日本語</strong></td>
-  </tr>
-</table>
+[English](README.md) | 日本語
 
-Version: `0.0.5`
+Codex Usage Nano は、Codex の使用量をすぐ見るための小さな macOS アプリです。CodexBar に入っているローカルコマンド `CodexBarCLI` を使って動きます。
 
-## Codex の残り使用量を一目で
+MacBook のノッチ周りでメニューバー項目が見づらい人や、Codex の残り使用量を作業中にすぐ確認したい人向けです。
 
-Codex Usage Nano は、Codex の残り使用量を一目で確認するための macOS アプリです。
-
-作業の邪魔をしない小さなフローティングタブは、画面上のどこにでも配置できます。もうノッチの陰に隠れることはありません。
-
-タブ内の二つのカラーバーで、セッション／週次の残トークンを表示。マウスオーバーでセッション残量%を確認。ワンクリックで詳細パネルを開けます。
-
-<p align="center">
-  <img src="screenshots/app-icon.png" alt="Codex Usage Nano のアプリアイコン" width="128">
-</p>
-
-## デモ
-
-この GIF で基本の動きが分かります。タブには 3 段階の表示形式があり、画面上の好きな場所へドラッグでき、タブをワンクリックすると詳細パネルが開きます。メニューバー項目ではないので、MacBook のノッチに隠れません。
+## プレビュー
 
 <table>
   <tr>
-    <td align="center"><strong>3 段階の表示形式</strong></td>
-    <td align="center"><strong>好きな場所へ配置可能</strong></td>
+    <td align="center"><strong>ホバーで残量表示</strong></td>
+    <td align="center"><strong>ドラッグと詳細パネル</strong></td>
   </tr>
   <tr>
-    <td><img src="screenshots/codex-usage-nano-demo-hover.gif" alt="マウスを乗せるとタブが広がり、離すとカラーバーに戻るデモ" width="380"></td>
-    <td><img src="screenshots/codex-usage-nano-demo-panel.gif" alt="小さなタブを画面上の好きな場所へ配置するデモ" width="380"></td>
+    <td><img src="screenshots/codex-usage-nano-demo-hover.gif" alt="最小タブにマウスを乗せるとセッション残量が表示される様子" width="380"></td>
+    <td><img src="screenshots/codex-usage-nano-demo-panel.gif" alt="フローティングタブをドラッグして詳細パネルを開く様子" width="380"></td>
   </tr>
 </table>
-
-タブにポインタを乗せると、コンパクトなカラーバーがセッション残量の大きな数字に変わります。タブをクリックすると詳細パネルが開閉します。カーソルをタブから離すと、タブは二つのカラーバーだけの表示に戻ります。
 
 <table>
   <tr>
     <td align="center"><strong>最小タブ</strong></td>
-    <td align="center"><strong>マウスオーバーで数値表示</strong></td>
-    <td align="center"><strong>数値表示 + 詳細パネル</strong></td>
+    <td align="center"><strong>ホバー</strong></td>
+    <td align="center"><strong>ホバー + 詳細パネル</strong></td>
     <td align="center"><strong>詳細パネル</strong></td>
   </tr>
   <tr>
-    <td><img src="screenshots/codex-usage-nano-collapsed.png" alt="2 本の小さなカラーバーを表示する最小タブ" width="210"></td>
-    <td><img src="screenshots/codex-usage-nano-hover.png" alt="マウスオーバーで 69% の残量を表示しているタブ" width="210"></td>
-    <td><img src="screenshots/codex-usage-nano-hover-panel.png" alt="詳細パネルを開いたままタブにマウスオーバーしている状態" width="210"></td>
-    <td><img src="screenshots/codex-usage-nano-panel.png" alt="タブの下に開いた詳細パネル" width="210"></td>
+    <td><img src="screenshots/codex-usage-nano-collapsed.png" alt="セッションと週次のバーだけを表示する最小タブ" width="210"></td>
+    <td><img src="screenshots/codex-usage-nano-hover.png" alt="ホバー中にセッション残量を表示しているタブ" width="210"></td>
+    <td><img src="screenshots/codex-usage-nano-hover-panel.png" alt="詳細パネルを開いたままホバーしているタブ" width="210"></td>
+    <td><img src="screenshots/codex-usage-nano-panel.png" alt="Codex Usage Nano の詳細パネル" width="210"></td>
   </tr>
 </table>
 
-## 1. 概要
+## なぜ作ったか
 
-Codex Usage Nano は、Codex の残り使用量をすばやく確認するための軽量な macOS アプリです。中心となるのは、画面上の好きな位置へドラッグできる小さなフローティングタブです。
+メニューバーの使用量表示は、忙しい画面だと見落としやすく、ノッチ付き MacBook では場所によって隠れたり見づらくなったりします。
 
-MacBook Air / MacBook Pro のノッチでは、メニューバーアプリが隠れて見えなくなることがあります。Codex Usage Nano はメニューバーに常駐しないことで、その問題を避けます。起動中も Dock アイコンやメニューバー項目を増やさず、小さなタブだけを表示する補助アプリとして動きます。
+Codex Usage Nano は、メニューバーではなく小さなフローティングタブとして表示されます。見やすい場所に置いて、ホバーでセッション残量を見たり、クリックで詳細パネルを開いたりできます。
 
-このアプリは [steipete/CodexBar](https://github.com/steipete/CodexBar) と一緒に使う連携アプリです。CodexBar はインストール済みである必要がありますが、Codex Usage Nano 使用中に CodexBar アプリを起動しておく必要はありません。CodexBar 本体、OpenAI 認証情報、cookie、token は同梱せず、ローカルにインストール済みの `CodexBarCLI` を呼び出して使用量を取得します。
+## 機能
 
-この公開版は macOS のみです。iPhone アプリ、iOS widget、同期 backend、CodexBar の実行ファイルは含みません。
+- セッションと週次のバーを表示するフローティングタブ
+- ホバーでセッション残量のパーセントを表示
+- クリックで詳細パネルを開閉
+- 好きな場所へドラッグでき、位置を保存
+- 詳細パネルの移動とサイズ変更
+- 自動更新とタブメニューからの手動更新
+- ローカルの CodexBarCLI で使用量を取得し、起動中も Dock とメニューバーを増やさない
 
-## 2. 表示される情報
+## 必要なもの
 
-1. 最小表示のフローティングタブ内にある二つの小さなカラーバー。上がセッション、下が週次です。
-2. 横幅はそのままで縦に広がり、セッション残量の数字を大きく表示するマウスオーバー状態。
-3. クリックで開く、セッションと週次の詳細パネル。
-4. タブ付近の中央に出るコンパクトな初期サイズの詳細パネル。
-5. 各上限の残り割合、リセット時刻、ペース情報、予測表示。
-6. 20% と 50% の目印が付いた使用量バー。
-7. CodexBar の使用量データにペース情報がある場合に出る赤い目安線。
-8. 残量に応じたバーの色。残量30%超は水色、30%以下は黄色、15%以下は赤で表示。
-9. 詳細パネルの透明度を%で表示。展開中のタブの数字が水色に変わり、詳細パネルの右上にも `OP 〇〇%` の表示が出ます。
-10. フローティングタブ、詳細パネル、透明度 HUD、使用量バーの translucent glass-style 表示。
-11. 有効な詳細パネルの端と角に表示される macOS 標準のリサイズカーソル。
-12. `CodexBarCLI` が見つからない、または使用量を返せない場合の短いエラー表示。
+- macOS 14 以降
+- `/Applications/CodexBar.app` にインストールされた CodexBar
+- CodexBar の `codex` provider が設定済み
+- ソースからビルドする場合のみ Swift toolchain
 
-## 3. 主な機能
+Codex Usage Nano の実行中に CodexBar アプリを開いておく必要はありません。インストール済みの `CodexBarCLI` を直接呼び出します。
 
-1. セッションと週次の残トークンを、二つのカラーバーで見せる小さなフローティングタブ。
-2. パネルを開かずにセッション残量を確認できる、マウスオーバーでの数値表示。
-3. リセット時刻、ペース、予測、使用量バーを確認できるワンクリック詳細パネル。
-4. MacBook のノッチに隠れない、画面上の好きな場所へのタブ配置。
-5. 次回起動時にも再利用されるタブ位置。
-6. タブの近くに開き、画面端では画面内に収まり、動かした場合はタブとの位置関係を保存する詳細パネル。
-7. コンパクトでサイズ変更できる詳細パネル。
-8. 有効な端と角から使える macOS 標準の詳細パネルサイズ変更。
-9. 詳細パネルをダブルクリックして初期サイズへ戻すリセット。
-10. タブをダブルクリックして透明度100%とデフォルトのタブ／詳細パネル位置関係へ戻すリストア。
-11. 60 秒ごとの自動更新と、タブメニューからの手動更新。
-12. 将来のローカル連携向けに使える、任意の sanitized local snapshot。
-13. 残量 0% のバーは色付きの細い線を残さず、neutral track だけになります。
-14. 使用量の取得は、インストール済みの `CodexBarCLI` だけを通すローカル完結の設計。
+## インストール
 
-## 4. 必要なもの
+### リリース版を使う
 
-1. macOS 14 以降。
-2. `/Applications/CodexBar.app` にインストールされた [CodexBar](https://github.com/steipete/CodexBar)。
-3. CodexBar の `codex` provider（Codex 用の取得設定）が使える状態。
-4. ソースコードからビルドする場合は Swift 開発環境。
+[GitHub Releases](https://github.com/AkiGarage/codex-usage-nano/releases/latest) から最新の `CodexUsageNano-*-macos.zip` をダウンロードし、展開して `CodexUsageNano.app` を `/Applications` に移動します。
 
-CodexBar はインストール済みである必要がありますが、Codex Usage Nano 使用中に CodexBar アプリを起動しておく必要はありません。使用量の更新時に、インストール済みの `CodexBarCLI` を直接呼び出します。
-
-Swift の開発ツールがない場合は、先に Xcode Command Line Tools を入れてください。
+そのあと起動します。
 
 ```bash
-xcode-select --install
+open -n /Applications/CodexUsageNano.app
 ```
 
-## 5. インストール
+macOS が未確認アプリとして警告する場合は、System Settings > Privacy & Security から `CodexUsageNano.app` の実行を許可します。
 
-### 5.1 リリース版を使う
-
-1. GitHub Releases から `CodexUsageNano-0.0.5-macos.zip` をダウンロードします。
-2. zip を展開します。
-3. `CodexUsageNano.app` を `/Applications` に移動します。
-4. `/Applications` にある `CodexUsageNano.app` をダブルクリックして起動します。
-
-macOS が未確認アプリとして警告する場合は、System Settings > Privacy & Security から実行を許可してください。
-
-### 5.2 ソースコードからビルドする
+### ソースからビルド
 
 ```bash
 git clone https://github.com/AkiGarage/codex-usage-nano.git
@@ -131,166 +83,83 @@ ditto dist/CodexUsageNano.app /Applications/CodexUsageNano.app
 open -n /Applications/CodexUsageNano.app
 ```
 
-## 6. 使い方
+## 使い方
 
-### 6.1 起動
+| 操作 | 方法 |
+| --- | --- |
+| 起動 | `/Applications` の `CodexUsageNano.app` を開きます。 |
+| 詳細パネルを開く / 閉じる | フローティングタブをクリックします。 |
+| タブを動かす | タブをドラッグします。位置は次回起動時にも使われます。 |
+| 詳細パネルを動かす / サイズ変更する | パネルの背景をドラッグして移動し、端や角をドラッグしてサイズ変更します。 |
+| 更新 | タブを右クリック、二本指タップ、または Control-click して `Refresh` を選びます。 |
+| 透明度を調整 | 詳細パネルまたはタブ上で二本指スワイプします。タブをダブルクリックすると 100% に戻り、タブとパネルの位置関係も初期状態に戻ります。 |
+| 終了 | タブメニューを使うか、`pkill -x CodexUsageNano` を実行します。 |
 
-`/Applications`（「アプリケーション」フォルダー）にある `CodexUsageNano.app` をダブルクリックします。
-
-ダウンロードしたアプリが未確認アプリとしてブロックされる場合は、System Settings > Privacy & Security を開いて実行を許可してください。
-
-ターミナルから起動することもできます。
-
-```bash
-open -n /Applications/CodexUsageNano.app
-```
-
-起動すると、画面上に小さなフローティングタブが表示されます。
-
-Codex Usage Nano 使用中に、CodexBar アプリを別途起動しておく必要はありません。使用量の更新時に、インストール済みの `CodexBarCLI` を直接呼び出します。
-
-### 6.2 詳細パネルを開く / 閉じる
-
-小さなタブをクリックします。
-
-1. 1回クリック: 詳細パネルを表示。
-2. もう1回クリック: 詳細パネルを非表示。
-
-### 6.3 タブの位置を変える
-
-タブをドラッグします。位置は保存され、次回起動時にも再利用されます。
-
-メニューバー項目に頼らず、使用量を見やすい場所へ置けます。
-
-タブをダブルクリックすると、詳細パネルの透明度が100%に戻り、タブと詳細パネルの位置関係もデフォルトに戻って、詳細パネルが再表示されます。
-
-### 6.4 タブの表示を読む
-
-通常の最小タブには 2 本の小さなカラーバーが表示されます。上がセッション、下が週次です。
-
-タブにポインタを乗せると、横幅はそのままで縦に少し広がり、セッション残量の数字が大きく表示されます。通常の数字は system text color です。
-
-カーソルをタブから離すと、タブは二つのカラーバーだけの表示に戻ります。
-
-### 6.5 詳細パネルを動かす / サイズ変更する
-
-詳細パネルはドラッグで好きな場所へ移動できます。移動後のタブとの位置関係は保存され、次にパネルを開いたときにも同じ場所で開かれます。タブをダブルクリックすると位置関係をリセットできます。
-
-詳細パネルの端または角をドラッグすると、サイズ変更できます。
-
-詳細パネルをダブルクリックすると、コンパクトな初期サイズに戻ります。
-
-### 6.6 使用量を更新する
-
-Codex Usage Nano は 60 秒ごとに自動更新します。
-
-すぐ更新したい場合は、タブを右クリック、二本指タップ、または Control キーを押しながらクリックして、`Refresh` を選びます。
-
-### 6.7 透明度を調整する
-
-詳細パネル上で二本指スワイプします。調整中は詳細パネルに `OP 〇〇%` が表示され、展開中のタブの数字も黒ではなく水色になります。
-
-タブからも透明度を調整できます。詳細パネルを透明にしすぎて操作しづらくなった場合は、タブ上で二本指スワイプするか、タブをダブルクリックすると復帰できます。
-
-### 6.8 タブメニューを使う
-
-タブを右クリック、二本指タップ、または Control キーを押しながらクリックするとメニューが開きます。
+最小タブは、上のバーがセッション、下のバーが週次です。セッションは現在の 5 時間の Codex 使用枠、週次は週ごとの使用枠です。詳細パネルでは、リセット時刻、ペース、予測、大きめのバーを確認できます。
 
 ![Show Panel、Refresh、Quit を表示したタブメニュー](screenshots/tab-menu.png)
 
-1. `Show Panel` / `Hide Panel`: 詳細パネルを表示または非表示にします。
-2. `Refresh`: Codex 使用量をすぐ更新します。
-3. `Quit Codex Usage Nano`: アプリを終了します。
+## プライバシー
 
-### 6.9 ターミナルから終了する
+- OpenAI token、cookie、password は保存しません。
+- CodexBar 本体や実行ファイルは同梱しません。
+- ローカルの `/Applications/CodexBar.app/Contents/Helpers/CodexBarCLI` を呼び出します。
+- ローカル snapshot がある場合も、表示向けに整理された使用量データだけを含みます。
+- 広い LAN に向けた未認証サーバーは公開しません。
 
-```bash
-pkill -x CodexUsageNano
+ローカル snapshot は次の場所に書き込まれることがあります。
+
+```text
+~/Library/Application Support/CodexUsageNano/latest-usage-snapshot.json
+/private/tmp/codex-usage-nano/latest-usage-snapshot.json
 ```
 
-## 7. ログイン時に自動起動する
+## トラブルシュート
 
-1. System Settings を開く。
-2. General を開く。
-3. Login Items を開く。
-4. `+` を押す。
-5. `/Applications/CodexUsageNano.app` を選ぶ。
+### `CodexBarCLI not found`
 
-## 8. アンインストール
-
-アプリを終了します。
-
-```bash
-pkill -x CodexUsageNano
-```
-
-アプリをゴミ箱に移動します。
-
-```bash
-trash /Applications/CodexUsageNano.app
-```
-
-`trash` コマンドがない場合は、Finder で `/Applications/CodexUsageNano.app` をゴミ箱に入れてください。
-
-保存されたタブ位置、詳細パネル位置、アプリ設定を削除します。
-
-```bash
-defaults delete local.codex.CodexUsageNano
-```
-
-## 9. トラブルシュート
-
-### 9.1 `CodexBarCLI not found`
-
-CodexBar が `/Applications/CodexBar.app` に入っているか確認してください。
+CodexBar が `/Applications` に入っているか確認します。
 
 ```bash
 ls /Applications/CodexBar.app/Contents/Helpers/CodexBarCLI
 ```
 
-### 9.2 使用量が更新されない
+### 使用量が更新されない
 
-CodexBarCLI 単体で usage が取れるか確認してください。
+CodexBarCLI だけで使用量を取得できるか確認します。
 
 ```bash
 /Applications/CodexBar.app/Contents/Helpers/CodexBarCLI usage --provider codex --no-color
 ```
 
-このコマンドが失敗する場合は、CodexBar 側の設定やログイン状態を先に確認してください。
+このコマンドが失敗する場合は、CodexBar を開いて `codex` provider の設定を確認してください。
 
-### 9.3 タブや詳細パネルが画面の変な場所に出る
+### タブや詳細パネルが変な場所に出る
 
-保存された位置設定と詳細パネル位置を消すと初期位置に戻ります。
+保存された位置と設定をリセットします。
 
 ```bash
 defaults delete local.codex.CodexUsageNano
 open -n /Applications/CodexUsageNano.app
 ```
 
-### 9.4 アプリが Dock に表示されない
+### macOS にブロックされる
 
-これは仕様です。Codex Usage Nano は macOS の補助アプリとして動くため、Dock やメニューバーを増やしません。
+System Settings > Privacy & Security を開き、ブロックされた `CodexUsageNano.app` の実行を許可します。
 
-### 9.5 macOS がアプリをブロックする
+## アンインストール
 
-ダウンロードしたアプリが未確認アプリとしてブロックされる場合は、System Settings > Privacy & Security を開いて実行を許可してください。
+アプリを終了し、`CodexUsageNano.app` をゴミ箱に移動して、保存設定を削除します。
 
-## 10. プライバシーと安全性
+```bash
+pkill -x CodexUsageNano
+defaults delete local.codex.CodexUsageNano
+```
 
-1. Codex Usage Nano は CodexBar のソースコードや実行ファイルを同梱しません。
-2. Codex Usage Nano は OpenAI / Codex の token、cookie、password、認証情報を保存しません。
-3. 使用量の取得はローカルの `/Applications/CodexBar.app/Contents/Helpers/CodexBarCLI` に委ねます。
-4. 使用量の取得に成功したあと、アプリは sanitized local snapshot を `~/Library/Application Support/CodexUsageNano/latest-usage-snapshot.json` と `/private/tmp/codex-usage-nano/latest-usage-snapshot.json` に書き込むことがあります。
-5. local snapshot に含まれるのは、使用量の割合、表示用テキスト、目印の割合、タイムスタンプです。cookie、OpenAI token、email address、CodexBar の生出力、ローカル user home path は含みません。
-6. このアプリは使用量データを unauthenticated broad LAN server として公開しません。
-7. この公開版は macOS のみです。
+## ライセンスと謝辞
 
-## 11. ライセンスと謝辞
-
-Codex Usage Nano は MIT License で公開されています。詳細は [LICENSE](LICENSE) を確認してください。
+MIT License です。詳しくは [LICENSE](LICENSE) を見てください。
 
 Codex Usage Nano は [steipete/CodexBar](https://github.com/steipete/CodexBar) と一緒に使う連携アプリです。CodexBar も MIT License で公開されています。
 
-## 12. 変更履歴
-
-[CHANGELOG.md](CHANGELOG.md) を確認してください。
+変更履歴は [CHANGELOG.md](CHANGELOG.md) にあります。
